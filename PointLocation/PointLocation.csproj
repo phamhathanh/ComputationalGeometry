@@ -7,8 +7,8 @@
     <ProjectGuid>{02905FAF-5EF7-4236-AF25-451D33D23450}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PointLocation</RootNamespace>
-    <AssemblyName>PointLocation</AssemblyName>
+    <RootNamespace>Computational.PointLocation</RootNamespace>
+    <AssemblyName>Computational.PointLocation</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,14 +40,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="TrapezoidalMap.cs" />
+    <Compile Include="HalfEdgeNode.cs" />
+    <Compile Include="Node.cs" />
     <Compile Include="Trapezoidal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TrapezoidalNode.cs" />
+    <Compile Include="VertexNode.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{af884e47-e8a2-4f97-a339-7aead08c0d93}</Project>
       <Name>Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
