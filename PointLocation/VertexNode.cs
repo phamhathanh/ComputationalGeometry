@@ -7,7 +7,7 @@ using ComputationalGeometry.Common;
 
 namespace ComputationalGeometry.PointLocation
 {
-    public class VertexNode: Node
+    class VertexNode: Node
     {
         Vertex Vertex;
 

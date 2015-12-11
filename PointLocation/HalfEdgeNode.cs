@@ -7,7 +7,7 @@ using ComputationalGeometry.Common;
 
 namespace ComputationalGeometry.PointLocation
 {
-    public class HalfEdgeNode : Node
+    class HalfEdgeNode : Node
     {
         HalfEdge edge;
 

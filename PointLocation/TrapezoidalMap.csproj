@@ -45,6 +45,7 @@
     <Compile Include="ISegment.cs" />
     <Compile Include="IVertex.cs" />
     <Compile Include="IVerticalEdge.cs" />
+    <Compile Include="Point.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -53,7 +54,7 @@
     <Compile Include="TrapezoidalMap.cs" />
     <Compile Include="HalfEdgeNode.cs" />
     <Compile Include="Node.cs" />
-    <Compile Include="Trapezoidal.cs" />
+    <Compile Include="Trapezoid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TrapezoidalNode.cs" />
     <Compile Include="VertexNode.cs" />

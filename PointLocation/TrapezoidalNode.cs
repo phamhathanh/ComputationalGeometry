@@ -1,10 +1,18 @@
-﻿namespace ComputationalGeometry.PointLocation
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using ComputationalGeometry.Common;
+
+namespace ComputationalGeometry.PointLocation
 {
     public class TrapezoidalNode : Node
     {
-        Trapezoidal Trapezoidal;
+        private Func<List<HalfEdge>, Trapezoid> rectangleBoundary;
+        Trapezoid Trapezoidal;
 
-        public TrapezoidalNode(Trapezoidal trapezoidal)
+        public TrapezoidalNode(Trapezoid trapezoidal)
         {
             this.Trapezoidal = trapezoidal;
             LeftChildren = null;
