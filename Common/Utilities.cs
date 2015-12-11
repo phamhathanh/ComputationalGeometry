@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ComputationalGeometry.Common
 {
-    public static class Algorithm
+    public static class Utilities
     {
         public static IEnumerable<int> RandomPermutation(int n)
         {

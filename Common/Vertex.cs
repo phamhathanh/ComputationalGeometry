@@ -1,6 +1,6 @@
 ﻿namespace ComputationalGeometry.Common
 {
-    public class Vertex
+    public class Vertex : IVertex
     {
         private readonly double x, y;
 

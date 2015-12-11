@@ -1,11 +1,4 @@
-﻿using ComputationGeometry;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PointLocation
+﻿namespace ComputationalGeometry.PointLocation
 {
     public class TrapezoidalNode : Node
     {

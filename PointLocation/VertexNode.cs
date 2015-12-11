@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ComputationalGeometry.Common;
 
-namespace PointLocation
+namespace ComputationalGeometry.PointLocation
 {
     public class VertexNode: Node
     {

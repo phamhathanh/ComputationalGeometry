@@ -1,12 +1,8 @@
 ﻿using ComputationalGeometry.Common;
-using ComputationGeometry;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace PointLocation
+namespace ComputationalGeometry.PointLocation
 {
     public class TrapezoidalMap
     {
@@ -17,11 +13,10 @@ namespace PointLocation
 
         public TrapezoidalMap(List<HalfEdge> listEdges)
         {
-            int n = listEdges.Count<HalfEdge>();
-            IEnumerable<int> randomPermutation = Algorithm.RandomPermutation(n);
+            int n = listEdges.Count();
+            IEnumerable<int> randomPermutation = Utilities.RandomPermutation(n);
 
             Trapezoidal RecBoundary = RectangleBoundary(listEdges);
-
         }
 
         private Trapezoidal RectangleBoundary(List<HalfEdge> listEdges)

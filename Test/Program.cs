@@ -20,7 +20,7 @@ namespace Test
         {
             for (int i = 0; i < 10; i++)
             {
-                foreach (int index in Algorithm.RandomPermutation(5))
+                foreach (int index in Utilities.RandomPermutation(5))
                 {
                     Console.Write(index);
                     Console.Write(" ");

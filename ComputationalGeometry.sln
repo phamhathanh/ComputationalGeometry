@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{AF884E47-E8A2-4F97-A339-7AEAD08C0D93}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PointLocation", "PointLocation\PointLocation.csproj", "{02905FAF-5EF7-4236-AF25-451D33D23450}"
@@ -8,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{FE04BA78-2D5A-40D2-B17F-338212D7DA2D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LineSegmentIntersection", "LineSegmentIntersection\LineSegmentIntersection.csproj", "{D357C40D-90D1-4757-B99E-DD0C16C92CF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotionPlanning", "MotionPlanning\MotionPlanning.csproj", "{7E1119C4-8765-4177-AC64-BA3D95EBD7EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +35,10 @@ Global
 		{D357C40D-90D1-4757-B99E-DD0C16C92CF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D357C40D-90D1-4757-B99E-DD0C16C92CF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D357C40D-90D1-4757-B99E-DD0C16C92CF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E1119C4-8765-4177-AC64-BA3D95EBD7EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E1119C4-8765-4177-AC64-BA3D95EBD7EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E1119C4-8765-4177-AC64-BA3D95EBD7EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E1119C4-8765-4177-AC64-BA3D95EBD7EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
