@@ -7,8 +7,8 @@
     <ProjectGuid>{02905FAF-5EF7-4236-AF25-451D33D23450}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ComputationalGeometry.PointLocation</RootNamespace>
-    <AssemblyName>ComputationalGeometry.PointLocation</AssemblyName>
+    <RootNamespace>ComputationalGeometry.TrapezoidalMap</RootNamespace>
+    <AssemblyName>ComputationalGeometry.TrapezoidalMap</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

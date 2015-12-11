@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ComputationalGeometry.PointLocation
+namespace ComputationalGeometry.TrapezoidalMap
 {
     public interface ISegment
     {

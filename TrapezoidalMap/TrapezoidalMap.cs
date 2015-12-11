@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ComputationalGeometry.PointLocation
+namespace ComputationalGeometry.TrapezoidalMap
 {
     public class TrapezoidalMap
     {

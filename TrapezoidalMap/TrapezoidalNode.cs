@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ComputationalGeometry.Common;
 
-namespace ComputationalGeometry.PointLocation
+namespace ComputationalGeometry.TrapezoidalMap
 {
     public class TrapezoidalNode : Node
     {

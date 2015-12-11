@@ -1,6 +1,6 @@
 ﻿namespace ComputationalGeometry.Common
 {
-    public class Vertex : IVertex
+    public class Vertex
     {
         private readonly double x, y;
         public HalfEdge OutEdge { get; set; }

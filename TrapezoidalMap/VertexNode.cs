@@ -5,15 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using ComputationalGeometry.Common;
 
-namespace ComputationalGeometry.PointLocation
+namespace ComputationalGeometry.TrapezoidalMap
 {
-    class HalfEdgeNode : Node
+    class VertexNode: Node
     {
-        HalfEdge edge;
+        Vertex Vertex;
 
-        public HalfEdgeNode(HalfEdge edge)
+        public VertexNode(Vertex vertex)
         {
-            this.edge = edge;
+            this.Vertex = vertex;
         }
     }
 }

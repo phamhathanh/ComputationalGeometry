@@ -1,4 +1,4 @@
-﻿namespace ComputationalGeometry.PointLocation
+﻿namespace ComputationalGeometry.TrapezoidalMap
 {
     public abstract class Node
     {
