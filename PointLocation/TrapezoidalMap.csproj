@@ -7,8 +7,8 @@
     <ProjectGuid>{02905FAF-5EF7-4236-AF25-451D33D23450}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Computational.PointLocation</RootNamespace>
-    <AssemblyName>Computational.PointLocation</AssemblyName>
+    <RootNamespace>ComputationalGeometry.PointLocation</RootNamespace>
+    <AssemblyName>ComputationalGeometry.PointLocation</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Point.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -48,7 +49,7 @@
     <Compile Include="TrapezoidalMap.cs" />
     <Compile Include="HalfEdgeNode.cs" />
     <Compile Include="Node.cs" />
-    <Compile Include="Trapezoidal.cs" />
+    <Compile Include="Trapezoid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TrapezoidalNode.cs" />
     <Compile Include="VertexNode.cs" />

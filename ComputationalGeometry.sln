@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{AF884E47-E8A2-4F97-A339-7AEAD08C0D93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PointLocation", "PointLocation\PointLocation.csproj", "{02905FAF-5EF7-4236-AF25-451D33D23450}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrapezoidalMap", "PointLocation\TrapezoidalMap.csproj", "{02905FAF-5EF7-4236-AF25-451D33D23450}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{FE04BA78-2D5A-40D2-B17F-338212D7DA2D}"
 EndProject

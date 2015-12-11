@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PointLocation
+namespace ComputationalGeometry.PointLocation
 {
     public abstract class Node
     {

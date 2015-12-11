@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using ComputationalGeometry.Common;
 
-namespace PointLocation
+namespace ComputationalGeometry.PointLocation
 {
-    public class HalfEdgeNode : Node
+    class HalfEdgeNode : Node
     {
         HalfEdge edge;
 
