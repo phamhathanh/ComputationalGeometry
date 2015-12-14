@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ComputationalGeometry.Common;
-
-namespace ComputationalGeometry.TrapezoidalMap
+﻿namespace ComputationalGeometry.TrapezoidalMap
 {
-    class VertexNode: Node
+    class VertexNode : Node
     {
-        Vertex Vertex;
+        public IVertex Vertex { get; }
 
-        public VertexNode(Vertex vertex)
+        public VertexNode(IVertex vertex)
         {
-            this.Vertex = vertex;
+            Vertex = vertex;
         }
     }
 }

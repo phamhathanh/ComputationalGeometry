@@ -1,17 +1,19 @@
 ﻿using ComputationalGeometry.Common;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ComputationalGeometry.TrapezoidalMap
 {
-    public class TrapezoidalMap
+    public class TrapezoidalMap : ITrapezoidalMap
     {
-        public static Node Root { get; set; }
-        static IEnumerable<Vertex> Vertices { get; set; }
-        static IEnumerable<HalfEdge> HalfEdges { get; set; }
-        static IEnumerable<Face> Faces { get; set; }
+        public INode Root { get; set; }
+        IEnumerable<Vertex> Vertice;
+        IEnumerable<HalfEdge> HalfEdges;
+        IEnumerable<Face> Faces;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public TrapezoidalMap(List<HalfEdge> listEdges)
         {
             int n = listEdges.Count<HalfEdge>();
@@ -20,13 +22,12 @@ namespace ComputationalGeometry.TrapezoidalMap
             Trapezoid RecBoundary = RectangleBoundary(listEdges);
 
             Root = new TrapezoidalNode(RecBoundary);
-
         }
 
         private static Trapezoid RectangleBoundary(List<HalfEdge> listEdges)
         {
-            Vertex origin = listEdges[0].Origin;
-            Vertex twinOrigin = listEdges[0].Twin.Origin;
+            Vertex origin = new Vertex(listEdges[0].Origin.X, listEdges[0].Origin.Y);
+            Vertex twinOrigin = new Vertex(listEdges[0].Twin.Origin.X, listEdges[0].Twin.Origin.Y);
 
             double leftCoordinate = origin.X <= twinOrigin.X ? origin.X : twinOrigin.X;
             double rightCoordinate = origin.X >= twinOrigin.X ? origin.X : twinOrigin.X;
@@ -37,28 +38,13 @@ namespace ComputationalGeometry.TrapezoidalMap
             R.Leftp = new Vertex(leftCoordinate, topCoordinate);
             R.Rightp = new Vertex(rightCoordinate, bottomCoordinate);
 
-            R.Top = new HalfEdge();
-            R.Bottom = new HalfEdge();
-            HalfEdge twinTop = new HalfEdge();
-            HalfEdge twinBottom = new HalfEdge();
-
-            R.Leftp.OutEdge = R.Top;
-            R.Rightp.OutEdge = R.Bottom;
-
-            R.Top.Origin = R.Leftp;
-            R.Bottom.Origin = R.Rightp;
-            twinTop.Origin = new Vertex(rightCoordinate, topCoordinate);
-            twinBottom.Origin = new Vertex(leftCoordinate, bottomCoordinate);
-
-            R.Top.Twin = twinTop;
-            R.Bottom.Twin = twinBottom;
-            twinTop.Twin = R.Top;
-            twinBottom.Twin = R.Bottom;
+            R.Top = new Segment(new Vertex(leftCoordinate, topCoordinate), new Vertex(rightCoordinate, topCoordinate));
+            R.Bottom = new Segment(new Vertex(leftCoordinate, bottomCoordinate), new Vertex(rightCoordinate, bottomCoordinate));
             
             return R;
         }
 
-        static Trapezoid PointLocation(Point p, Node root)
+        static Trapezoid PointLocation(Point p, INode root)
         {
             return new Trapezoid();
         }

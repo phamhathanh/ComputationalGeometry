@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ComputationalGeometry.Common;
-
-namespace ComputationalGeometry.TrapezoidalMap
+﻿namespace ComputationalGeometry.TrapezoidalMap
 {
-    public class TrapezoidalNode : Node
+    class TrapezoidalNode : Node
     {
-        private Func<List<HalfEdge>, Trapezoid> rectangleBoundary;
-        Trapezoid Trapezoidal;
+        public ITrapezoid Trapezoid { get; }
 
-        public TrapezoidalNode(Trapezoid trapezoidal)
+        public TrapezoidalNode(ITrapezoid trapezoid)
         {
-            this.Trapezoidal = trapezoidal;
+            Trapezoid = trapezoid;
             LeftChildren = null;
             RightChildren = null;
         }

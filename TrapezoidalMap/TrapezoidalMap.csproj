@@ -40,7 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IFace.cs" />
+    <Compile Include="INode.cs" />
+    <Compile Include="Node.cs" />
     <Compile Include="ITrapezoidalMap.cs" />
     <Compile Include="ISegment.cs" />
     <Compile Include="IVertex.cs" />
@@ -51,12 +52,14 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="TrapezoidalMap.cs" />
-    <Compile Include="HalfEdgeNode.cs" />
-    <Compile Include="Node.cs" />
+    <Compile Include="Segment.cs" />
     <Compile Include="Trapezoid.cs" />
+    <Compile Include="TrapezoidalMap.cs" />
+    <Compile Include="SegmentNode.cs" />
+    <Compile Include="ITrapezoid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TrapezoidalNode.cs" />
+    <Compile Include="Vertex.cs" />
     <Compile Include="VertexNode.cs" />
   </ItemGroup>
   <ItemGroup>

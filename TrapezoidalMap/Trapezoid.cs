@@ -1,21 +1,1 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ComputationalGeometry.Common;
-
-namespace ComputationalGeometry.TrapezoidalMap
-{
-    public class Trapezoid
-    {
-        public Vertex Leftp { get; set; }
-        public Vertex Rightp { get; set; }
-        public HalfEdge Top { get; set; }
-        public HalfEdge Bottom { get; set; }
-        public Trapezoid HigherRightNeighbor { get; set; }
-        public Trapezoid HigherLeftNeighbor { get; set; }
-        public Trapezoid LowerLeftNeighbor { get; set; }
-        public Trapezoid LowerRightNeighbor { get; set; }
-    }
-}
+﻿namespace ComputationalGeometry.TrapezoidalMap{    class Trapezoid : ITrapezoid    {        public IVertex Leftp { get; set; }        public IVertex Rightp { get; set; }        public ISegment Top { get; set; }        public ISegment Bottom { get; set; }        public ITrapezoid HigherRightNeighbor { get; set; }        public ITrapezoid HigherLeftNeighbor { get; set; }        public ITrapezoid LowerLeftNeighbor { get; set; }        public ITrapezoid LowerRightNeighbor { get; set; }    }}

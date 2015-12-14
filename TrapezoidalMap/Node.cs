@@ -1,9 +1,9 @@
 ﻿namespace ComputationalGeometry.TrapezoidalMap
 {
-    public abstract class Node
+    abstract class Node : INode
     {
-        public Node Parent { get; set; }
-        public Node LeftChildren { get; set; }
-        public Node RightChildren { get; set; }
+        public INode Parent { get; set; }
+        public INode LeftChildren { get; set; }
+        public INode RightChildren { get; set; }
     }
 }

@@ -1,27 +1,11 @@
-﻿using System.Collections.Generic;
-
-namespace ComputationalGeometry.TrapezoidalMap
+﻿namespace ComputationalGeometry.TrapezoidalMap
 {
     public interface IVerticalEdge
     {
-        double X
-        {
-            get;
-        }
+        double X { get; }
 
-        IEnumerable<IFace> LeftFaces
-        {
-            get;
-        }
+        IVertex OriginVertex { get; }
 
-        IEnumerable<IFace> RightFaces
-        {
-            get;
-        }
-
-        IVertex Vertex
-        {
-            get;
-        }
+        IVertex ExtraVertex { get; }
     }
 }
