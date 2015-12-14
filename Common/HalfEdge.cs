@@ -1,4 +1,6 @@
-﻿namespace ComputationalGeometry.Common
+﻿using System;
+
+namespace ComputationalGeometry.Common
 {
     public class HalfEdge
     {
@@ -7,5 +9,10 @@
         public HalfEdge Next { get; set; }
         public HalfEdge Previous { get; set; }
         public Face Face { get; set; }
+
+        public bool Intersects(HalfEdge other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
