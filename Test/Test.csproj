@@ -62,8 +62,8 @@
       <Project>{7e1119c4-8765-4177-ac64-ba3d95ebd7eb}</Project>
       <Name>MotionPlanning</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PointLocation\TrapezoidalMap.csproj">
-      <Project>{2b74668d-7953-4bd7-afae-25efb60066a3}</Project>
+    <ProjectReference Include="..\TrapezoidalMap\TrapezoidalMap.csproj">
+      <Project>{02905faf-5ef7-4236-af25-451d33d23450}</Project>
       <Name>TrapezoidalMap</Name>
     </ProjectReference>
   </ItemGroup>

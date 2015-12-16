@@ -1,7 +1,11 @@
-﻿namespace ComputationalGeometry.TrapezoidalMap
+﻿using System.Collections.Generic;
+
+namespace ComputationalGeometry.TrapezoidalMap
 {
     public interface ITrapezoidalMap
     {
-        INode Root { get; }
+        IEnumerable<ITrapezoid> Trapezoids { get; }
+
+        IEnumerable<ISegment> Segments { get; }
     }
 }

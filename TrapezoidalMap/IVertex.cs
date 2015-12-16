@@ -2,19 +2,7 @@
 {
     public interface IVertex
     {
-        double X
-        {
-            get;
-        }
-
-        double Y
-        {
-            get;
-        }
-
-        IVerticalEdge Extension
-        {
-            get;
-        }
+        double X { get; }
+        double Y { get; }
     }
 }

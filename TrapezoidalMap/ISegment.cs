@@ -5,5 +5,9 @@
         IVertex LeftVertex { get; }
 
         IVertex RightVertex { get; }
+
+        ITrapezoid Top { get; }
+
+        ITrapezoid Bottom { get; }
     }
 }
