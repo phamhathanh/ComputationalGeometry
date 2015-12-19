@@ -20,7 +20,7 @@ namespace ComputationalGeometry.MotionPlanning
                 do
                 {
                     yield return currentEdge;
-                    currentEdge = currentEdge.Next;
+                    currentEdge = NextEdge(currentEdge);
                 }
                 while (currentEdge != firstEdge);
             }
@@ -62,13 +62,45 @@ namespace ComputationalGeometry.MotionPlanning
                 edge.Previous = previousEdge;
                 previousEdge.Next = edge;
 
-                // check for intersection
+                if (!EdgeIsValid(edge))
+                    throw new ArgumentException("Edges cannot intersect each other.");
 
                 previousVertex = vertex;
                 previousEdge = edge;
             }
 
             firstEdge.Previous = previousEdge;
+        }
+
+        private HalfEdge NextEdge(HalfEdge current)
+        {
+            try
+            {
+                return current.Next;
+            }
+            catch (NullReferenceException)
+            {
+                throw new ArgumentNullException("Edges are not closing.");
+            }
+        }
+
+        private bool EdgeIsValid(HalfEdge edge)
+        {
+            foreach (var currentEdge in CurrentEdges())
+                if (edge != currentEdge && edge.Intersects(currentEdge))
+                    return false;
+
+            return true;
+        }
+
+        private IEnumerable<HalfEdge> CurrentEdges()
+        {
+            var currentEdge = firstEdge;
+            while (currentEdge != null)
+            {
+                yield return currentEdge;
+                currentEdge = currentEdge.Next;
+            }
         }
     }
 }

@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace ComputationalGeometry.MotionPlanning
 {
-    public class MotionPlanner
+    class Robot
     {
-        public MotionPlanner(Polygon robot, IEnumerable<Polygon> obstacles)
-        {
 
-        }
     }
 }
