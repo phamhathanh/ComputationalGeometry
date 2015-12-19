@@ -2,17 +2,10 @@
 
 namespace ComputationalGeometry.TrapezoidalMap
 {
-    interface ITrapezoidalMap
+    public interface ITrapezoidalMap
     {
-        IEnumerable<IFace> Faces
-        {
-            get;
-        }
+        IEnumerable<ITrapezoid> Trapezoids { get; }
 
-        IEnumerable<ISegment> Segments
-        {
-            get;
-        }
-
+        IEnumerable<ISegment> Segments { get; }
     }
 }
