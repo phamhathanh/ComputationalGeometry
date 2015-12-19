@@ -2,24 +2,24 @@
 
 namespace ComputationalGeometry.TrapezoidalMap
 {
-    public interface ISegment
+    public interface IVerticalEdge
     {
-        IVertex LeftVertex
+        double X
         {
             get;
         }
 
-        IVertex RightVertex
+        IEnumerable<IFace> LeftFaces
         {
             get;
         }
 
-        IEnumerable<IFace> TopFaces
+        IEnumerable<IFace> RightFaces
         {
             get;
         }
 
-        IEnumerable<IFace> BottomFaces
+        IVertex Vertex
         {
             get;
         }
