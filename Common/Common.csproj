@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="RandomPermutation.cs" />
+    <Compile Include="Rectangle.cs" />
     <Compile Include="Segment.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="Face.cs" />

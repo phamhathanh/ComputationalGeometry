@@ -5,6 +5,11 @@ namespace ComputationalGeometry.TrapezoidalMap
 {
     public interface ITrapezoidalMap
     {
+        Rectangle BoundingBox
+        {
+            get;
+        }
+
         IEnumerable<ITrapezoid> Trapezoids
         {
             get;
