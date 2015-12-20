@@ -1,11 +1,12 @@
 ﻿using ComputationalGeometry.TrapezoidalMap;
 using System;
+using System.Collections.Generic;
 
 namespace ComputationalGeometry.MotionPlanning
 {
     class MockVerticalEdge : IVerticalEdge
     {
-        internal MockTrapezoid left, right;
+        internal MockTrapezoid[] lefts, rights;
         internal MockVertex vertex;
 
         public double XPosition
@@ -16,27 +17,27 @@ namespace ComputationalGeometry.MotionPlanning
             }
         }
 
-        public ITrapezoid LeftTrapezoid
-        {
-            get
-            {
-                return left;
-            }
-        }
-
-        public ITrapezoid RightTrapezoid
-        {
-            get
-            {
-                return right;
-            }
-        }
-
         public IVertex Vertex
         {
             get
             {
                 return vertex;
+            }
+        }
+
+        public IEnumerable<ITrapezoid> LeftTrapezoids
+        {
+            get
+            {
+                return lefts;
+            }
+        }
+
+        public IEnumerable<ITrapezoid> RightTrapezoids
+        {
+            get
+            {
+                return rights;
             }
         }
     }

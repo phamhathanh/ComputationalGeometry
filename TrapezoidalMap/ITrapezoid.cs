@@ -13,5 +13,15 @@ namespace ComputationalGeometry.TrapezoidalMap
         {
             get;
         }
+
+        IVerticalEdge LeftEdge
+        {
+            get;
+        }
+
+        IVerticalEdge RightEdge
+        {
+            get;
+        }
     }
 }

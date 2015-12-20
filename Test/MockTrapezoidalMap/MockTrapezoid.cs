@@ -10,6 +10,7 @@ namespace ComputationalGeometry.MotionPlanning
     class MockTrapezoid : ITrapezoid
     {
         internal MockSegment top, bottom;
+        internal MockVerticalEdge left, right;
 
         public ISegment TopSegment
         {
@@ -24,6 +25,22 @@ namespace ComputationalGeometry.MotionPlanning
             get
             {
                 return bottom;
+            }
+        }
+
+        public IVerticalEdge LeftEdge
+        {
+            get
+            {
+                return left;
+            }
+        }
+
+        public IVerticalEdge RightEdge
+        {
+            get
+            {
+                return right;
             }
         }
     }

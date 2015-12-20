@@ -7,7 +7,7 @@ namespace ComputationalGeometry.MotionPlanning
     class MockVertex : IVertex
     {
         internal Vector2 position;
-        internal MockVerticalEdge lower, upper;
+        internal MockVerticalEdge extension;
 
         public Vector2 Position
         {
@@ -17,19 +17,11 @@ namespace ComputationalGeometry.MotionPlanning
             }
         }
 
-        public IVerticalEdge LowerExtension
+        public IVerticalEdge Extension
         {
             get
             {
-                return lower;
-            }
-        }
-
-        public IVerticalEdge UpperExtension
-        {
-            get
-            {
-                return upper;
+                return extension;
             }
         }
     }

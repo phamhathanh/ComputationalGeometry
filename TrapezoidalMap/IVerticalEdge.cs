@@ -9,12 +9,12 @@ namespace ComputationalGeometry.TrapezoidalMap
             get;
         }
 
-        ITrapezoid LeftTrapezoid
+        IEnumerable<ITrapezoid> LeftTrapezoids
         {
             get;
         }
 
-        ITrapezoid RightTrapezoid
+        IEnumerable<ITrapezoid> RightTrapezoids
         {
             get;
         }
