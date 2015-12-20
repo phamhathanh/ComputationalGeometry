@@ -1,18 +1,20 @@
-﻿namespace ComputationalGeometry.TrapezoidalMap
+﻿using ComputationalGeometry.Common;
+
+namespace ComputationalGeometry.TrapezoidalMap
 {
     public interface IVertex
     {
-        double X
+        Vector2 Position
         {
             get;
         }
 
-        double Y
+        IVerticalEdge UpperExtension
         {
             get;
         }
 
-        IVerticalEdge Extension
+        IVerticalEdge LowerExtension
         {
             get;
         }

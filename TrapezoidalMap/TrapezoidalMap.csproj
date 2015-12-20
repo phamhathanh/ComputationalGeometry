@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IFace.cs" />
+    <Compile Include="ITrapezoid.cs" />
     <Compile Include="ITrapezoidalMap.cs" />
     <Compile Include="ISegment.cs" />
     <Compile Include="IVertex.cs" />

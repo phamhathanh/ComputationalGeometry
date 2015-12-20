@@ -4,17 +4,17 @@ namespace ComputationalGeometry.TrapezoidalMap
 {
     public interface IVerticalEdge
     {
-        double X
+        double XPosition
         {
             get;
         }
 
-        IEnumerable<IFace> LeftFaces
+        ITrapezoid LeftTrapezoid
         {
             get;
         }
 
-        IEnumerable<IFace> RightFaces
+        ITrapezoid RightTrapezoid
         {
             get;
         }

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using ComputationalGeometry.Common;
 
 namespace ComputationalGeometry.TrapezoidalMap
 {
-    interface ITrapezoidalMap
+    public interface ITrapezoidalMap
     {
-        IEnumerable<IFace> Faces
+        IEnumerable<ITrapezoid> Trapezoids
         {
             get;
         }
@@ -14,5 +15,6 @@ namespace ComputationalGeometry.TrapezoidalMap
             get;
         }
 
+        ITrapezoid PointLocation(Vector2 point);
     }
 }
