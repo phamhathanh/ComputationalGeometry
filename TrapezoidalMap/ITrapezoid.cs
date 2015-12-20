@@ -4,7 +4,12 @@ namespace ComputationalGeometry.TrapezoidalMap
 {
     public interface ITrapezoid
     {
-        ISegment TopSegment
+        IVerticalEdge LeftEdge
+        {
+            get;
+        }
+
+        IVerticalEdge RightEdge
         {
             get;
         }
@@ -14,12 +19,7 @@ namespace ComputationalGeometry.TrapezoidalMap
             get;
         }
 
-        IVerticalEdge LeftEdge
-        {
-            get;
-        }
-
-        IVerticalEdge RightEdge
+        ISegment TopSegment
         {
             get;
         }

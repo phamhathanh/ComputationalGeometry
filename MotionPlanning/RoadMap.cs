@@ -26,11 +26,12 @@ namespace ComputationalGeometry.MotionPlanning
 
         private Junction CreateJunction(ITrapezoid trapezoid)
         {
-
+            throw new NotImplementedException();
         }
 
         private Vector2 GetCenterPoint(ITrapezoid trapezoid)
         {
+            throw new NotImplementedException();
         }
     }
 }

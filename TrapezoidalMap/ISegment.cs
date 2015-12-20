@@ -14,12 +14,12 @@ namespace ComputationalGeometry.TrapezoidalMap
             get;
         }
 
-        IEnumerable<ITrapezoid> TopTrapezoids
+        IEnumerable<ITrapezoid> BottomTrapezoids
         {
             get;
         }
 
-        IEnumerable<ITrapezoid> BottomTrapezoids
+        IEnumerable<ITrapezoid> TopTrapezoids
         {
             get;
         }

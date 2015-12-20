@@ -28,6 +28,14 @@ namespace ComputationalGeometry.MotionPlanning
             }
         }
 
+        public Rectangle BoundingBox
+        {
+            get
+            {
+                return new Rectangle(0, 4, 0, 4);
+            }
+        }
+
         public ITrapezoid PointLocation(Vector2 point)
         {
             double x = point.x,

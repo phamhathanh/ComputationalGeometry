@@ -2,22 +2,22 @@
 {
     public class Rectangle
     {
-        private readonly double top, bottom, left, right;
+        private readonly double left, right, bottom, top;
 
-        public Rectangle(double top, double bottom, double left, double right)
+        public Rectangle(double left, double right, double bottom, double top)
         {
-            this.top = top;
-            this.bottom = bottom;
             this.left = left;
             this.right = right;
+            this.bottom = bottom;
+            this.top = top;
         }
 
         public Rectangle(Vector2 lowerLeft, Vector2 upperRight)
         {
-            this.top = upperRight.y;
-            this.bottom = lowerLeft.y;
             this.left = lowerLeft.x;
             this.right = upperRight.x;
+            this.bottom = lowerLeft.y;
+            this.top = upperRight.y;
         }
     }
 }
