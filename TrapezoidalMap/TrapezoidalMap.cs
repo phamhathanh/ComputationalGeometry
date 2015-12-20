@@ -15,7 +15,7 @@ namespace ComputationalGeometry.TrapezoidalMap
         public TrapezoidalMap(List<HalfEdge> listEdges)
         {
             int n = listEdges.Count<HalfEdge>();
-            IEnumerable<int> randomPermutation = Utilities.RandomPermutation(n);
+            var randomPermutation = new RandomPermutation(n);
 
             Trapezoid RecBoundary = RectangleBoundary(listEdges);
 
@@ -25,13 +25,13 @@ namespace ComputationalGeometry.TrapezoidalMap
 
         private static Trapezoid RectangleBoundary(List<HalfEdge> listEdges)
         {
-            Vertex origin = listEdges[0].Origin;
-            Vertex twinOrigin = listEdges[0].Twin.Origin;
+            Vector2 origin = listEdges[0].Origin.Position;
+            Vector2 twinOrigin = listEdges[0].Twin.Origin.Position;
 
-            double leftCoordinate = origin.X <= twinOrigin.X ? origin.X : twinOrigin.X;
-            double rightCoordinate = origin.X >= twinOrigin.X ? origin.X : twinOrigin.X;
-            double topCoordinate = origin.Y >= twinOrigin.Y ? origin.Y : twinOrigin.Y;
-            double bottomCoordinate = origin.Y <= twinOrigin.Y ? origin.Y : twinOrigin.Y;
+            double leftCoordinate = origin.x <= twinOrigin.x ? origin.x : twinOrigin.x;
+            double rightCoordinate = origin.x >= twinOrigin.x ? origin.x : twinOrigin.x;
+            double topCoordinate = origin.y >= twinOrigin.y ? origin.y : twinOrigin.y;
+            double bottomCoordinate = origin.y <= twinOrigin.y ? origin.y : twinOrigin.y;
 
             Trapezoid R = new Trapezoid();
             R.Leftp = new Vertex(leftCoordinate, topCoordinate);

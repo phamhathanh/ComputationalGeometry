@@ -8,6 +8,9 @@ namespace ComputationalGeometry.MotionPlanning
 {
     public class MotionPlanner
     {
+        private Robot robot;
+        private Polygon obstacles;
+
         public MotionPlanner(Polygon robot, IEnumerable<Polygon> obstacles)
         {
 

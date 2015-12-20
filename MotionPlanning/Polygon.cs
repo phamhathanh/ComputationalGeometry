@@ -8,7 +8,7 @@ namespace ComputationalGeometry.MotionPlanning
 {
     public class Polygon
     {
-        private HalfEdge firstEdge;
+        protected HalfEdge firstEdge;
 
         public IEnumerable<HalfEdge> Edges
         {
@@ -54,22 +54,20 @@ namespace ComputationalGeometry.MotionPlanning
             var previousEdge = firstEdge;
             for (int i = 2; i < vertices.Length; i++)
             {
-                var vertex = vertices[i];
-
                 var edge = new HalfEdge();
                 edge.Origin = previousVertex;
                 edge.Face = face;
                 edge.Previous = previousEdge;
                 previousEdge.Next = edge;
 
-                if (!EdgeIsValid(edge))
-                    throw new ArgumentException("Edges cannot intersect each other.");
-
-                previousVertex = vertex;
+                previousVertex = vertices[i];
                 previousEdge = edge;
             }
 
             firstEdge.Previous = previousEdge;
+
+            if (!PolygonIsValid())
+                throw new ArgumentException("Vertices are invalid.");
         }
 
         private HalfEdge NextEdge(HalfEdge current)
@@ -84,23 +82,20 @@ namespace ComputationalGeometry.MotionPlanning
             }
         }
 
-        private bool EdgeIsValid(HalfEdge edge)
+        protected virtual bool PolygonIsValid()
         {
-            foreach (var currentEdge in CurrentEdges())
-                if (edge != currentEdge && edge.Intersects(currentEdge))
-                    return false;
-
-            return true;
+            return PolygonIsSimple();
         }
 
-        private IEnumerable<HalfEdge> CurrentEdges()
+        private bool PolygonIsSimple()
         {
-            var currentEdge = firstEdge;
-            while (currentEdge != null)
-            {
-                yield return currentEdge;
-                currentEdge = currentEdge.Next;
-            }
+            foreach (var edge1 in Edges)
+                foreach (var edge2 in Edges)
+                    if (edge1 != edge2 && edge1.Intersects(edge2))
+                        return false;
+            // there are better ways than brute force
+
+            return true;
         }
     }
 }

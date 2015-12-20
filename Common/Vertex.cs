@@ -2,29 +2,30 @@
 {
     public class Vertex
     {
-        private readonly double x, y;
+        private readonly Vector2 position;
         public HalfEdge OutEdge { get; set; }
 
-        public double X
+        public Vector2 Position
         {
             get
             {
-                return x;
-            }
-        }
-
-        public double Y
-        {
-            get
-            {
-                return y;
+                return position;
             }
         }
 
         public Vertex(double x, double y)
         {
-            this.x = x;
-            this.y = y;
+            this.position = new Vector2(x, y);
+        }
+
+        public Vertex(Vector2 position)
+        {
+            this.position = position;
+        }
+
+        public override string ToString()
+        {
+            return position.ToString();
         }
     }
 }
