@@ -19,5 +19,10 @@
             this.bottom = lowerLeft.y;
             this.top = upperRight.y;
         }
+
+        public bool Contains(Vector2 point)
+        {
+            return !(point.y < bottom || point.y > top || point.x < left || point.x > right);
+        }
     }
 }

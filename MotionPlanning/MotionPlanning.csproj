@@ -47,7 +47,6 @@
     <Compile Include="RoadMap.cs" />
     <Compile Include="Road.cs" />
     <Compile Include="Junction.cs" />
-    <Compile Include="Robot.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
