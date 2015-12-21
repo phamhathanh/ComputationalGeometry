@@ -4,7 +4,9 @@ namespace ComputationalGeometry.Common
 {
     public struct Vector2
     {
-        public static readonly Vector2 Zero = new Vector2(0, 0);
+        public static readonly Vector2 Zero = new Vector2(0, 0),
+            Left = new Vector2(-1, 0), Right = new Vector2(1, 0),
+            Down = new Vector2(0, -1), Up = new Vector2(0, 1);
 
         public readonly double X, Y;
 
@@ -44,7 +46,7 @@ namespace ComputationalGeometry.Common
         {
             return new Vector2(d * v.X, d * v.Y);
         }
-        
+
         public static Vector2 operator *(Vector2 v, double d)
         {
             return d * v;

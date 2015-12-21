@@ -50,7 +50,7 @@ namespace ComputationalGeometry.MotionPlanning
             firstEdge.Origin = firstVertex;
             firstEdge.Face = face;
             face.ConnectedEdge = firstEdge;
-            
+
             var previousEdge = firstEdge;
             foreach (var point in points.Skip(1))
             {
@@ -60,7 +60,7 @@ namespace ComputationalGeometry.MotionPlanning
 
                 edge.Previous = previousEdge;
                 previousEdge.Next = edge;
-                
+
 
                 previousEdge = edge;
             }
@@ -139,6 +139,11 @@ namespace ComputationalGeometry.MotionPlanning
         {
             Vector2 v1 = edge1.Vector,
                     v2 = edge2.Vector;
+            return CompareVectorsByAngleWithXAxis(v1, v2);
+        }
+
+        private static int CompareVectorsByAngleWithXAxis(Vector2 v1, Vector2 v2)
+        {
             double crossProductZ = v1.X * v2.Y - v1.Y * v2.X;
             if (crossProductZ > 0)
                 return 1;
@@ -147,7 +152,7 @@ namespace ComputationalGeometry.MotionPlanning
             return 0;
         }
 
-        public ConvexPolygon PointReflection(Vector2 point)
+        public ConvexPolygon GetPointReflection(Vector2 point)
         {
             var reflections = new List<Vector2>();
             foreach (var vertex in Vertices)
@@ -155,6 +160,28 @@ namespace ComputationalGeometry.MotionPlanning
                 reflections.Add(2 * point - vertex.Position);
             }
             return new ConvexPolygon(reflections.ToArray());
+        }
+
+        public IEnumerable<Vector2> GetPointsAbove()
+        {
+            foreach (var edge in Edges)
+            {
+                var result1 = CompareVectorsByAngleWithXAxis(Vector2.Up, edge.Vector);
+                var result2 = CompareVectorsByAngleWithXAxis(Vector2.Down, edge.Vector);
+                
+                if (result1 == -1)
+                    continue;
+
+                if (result1 == 0)
+                    throw new NotImplementedException("Not yet implemented");
+                if (result2 == 0)
+                    throw new NotImplementedException("Not yet implemented");
+
+                if (result2 == -1)
+                    yield return edge.Origin.Position;
+
+                yield break;
+            }
         }
 
         public override string ToString()
