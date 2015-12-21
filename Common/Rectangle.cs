@@ -2,27 +2,27 @@
 {
     public struct Rectangle
     {
-        public readonly double left, right, bottom, top;
+        public readonly double Left, Right, Bottom, Top;
 
         public Rectangle(double left, double right, double bottom, double top)
         {
-            this.left = left;
-            this.right = right;
-            this.bottom = bottom;
-            this.top = top;
+            this.Left = left;
+            this.Right = right;
+            this.Bottom = bottom;
+            this.Top = top;
         }
 
         public Rectangle(Vector2 lowerLeft, Vector2 upperRight)
         {
-            this.left = lowerLeft.x;
-            this.right = upperRight.x;
-            this.bottom = lowerLeft.y;
-            this.top = upperRight.y;
+            this.Left = lowerLeft.X;
+            this.Right = upperRight.X;
+            this.Bottom = lowerLeft.Y;
+            this.Top = upperRight.Y;
         }
 
         public bool Contains(Vector2 point)
         {
-            return !(point.y < bottom || point.y > top || point.x < left || point.x > right);
+            return !(point.Y < Bottom || point.Y > Top || point.X < Left || point.X > Right);
         }
     }
 }

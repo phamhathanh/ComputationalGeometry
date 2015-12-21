@@ -13,6 +13,7 @@ namespace ComputationalGeometry.MotionPlanning
 
         public MotionPlanner(ConvexPolygon robot, IEnumerable<ConvexPolygon> obstacles)
         {
+            var reflection = robot.PointReflection()
             var cObstacles = new List<ConvexPolygon>();
             foreach (var obstacle in obstacles)
                 cObstacles.Add(robot + obstacle);

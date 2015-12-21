@@ -13,7 +13,7 @@ namespace ComputationalGeometry.MotionPlanning
         {
             get
             {
-                return vertex.position.x;
+                return vertex.position.X;
             }
         }
 

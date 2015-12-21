@@ -56,12 +56,12 @@ namespace ComputationalGeometry.MotionPlanning
                 bottom = trapezoid.BottomSegment;
 
             if (top == null)
-                topY = trapezoidalMap.BoundingBox.top;
+                topY = trapezoidalMap.BoundingBox.Top;
             else
                 topY = GetYComponent(top, centerX);
 
             if (bottom == null)
-                bottomY = trapezoidalMap.BoundingBox.bottom;
+                bottomY = trapezoidalMap.BoundingBox.Bottom;
             else
                 bottomY = GetYComponent(bottom, centerX);
 
@@ -79,25 +79,25 @@ namespace ComputationalGeometry.MotionPlanning
             bool isLowerExtension = vertex.LowerExtension == vertical;
             if (isLowerExtension)
             {
-                topY = vertex.Position.y;
+                topY = vertex.Position.Y;
 
                 var bottom = vertical.LeftTrapezoid.BottomSegment;
                 Debug.Assert(vertical.RightTrapezoid.BottomSegment == bottom);
 
                 if (bottom == null)
-                    bottomY = trapezoidalMap.BoundingBox.bottom;
+                    bottomY = trapezoidalMap.BoundingBox.Bottom;
                 else
                     bottomY = GetYComponent(bottom, centerX);
             }
             else
             {
-                bottomY = vertex.Position.y;
+                bottomY = vertex.Position.Y;
 
                 var top = vertical.LeftTrapezoid.TopSegment;
                 Debug.Assert(vertical.RightTrapezoid.TopSegment == top);
 
                 if (top == null)
-                    topY = trapezoidalMap.BoundingBox.top;
+                    topY = trapezoidalMap.BoundingBox.Top;
                 else
                     topY = GetYComponent(top, centerX);
             }
@@ -113,7 +113,7 @@ namespace ComputationalGeometry.MotionPlanning
             Vector2 left = segment.LeftVertex.Position,
                     right = segment.RightVertex.Position;
 
-            return (xPosition - left.x) * (right.y - left.y) / (right.x - left.x) + left.y;
+            return (xPosition - left.X) * (right.Y - left.Y) / (right.X - left.X) + left.Y;
         }
 
         public IEnumerable<Vector2> CalculatePath(Vector2 start, Vector2 goal)

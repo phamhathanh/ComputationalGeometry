@@ -4,13 +4,15 @@ namespace ComputationalGeometry.Common
 {
     public struct Vector2
     {
-        public readonly double x, y;
+        public static readonly Vector2 Zero = new Vector2(0, 0);
+
+        public readonly double X, Y;
 
         public double Length
         {
             get
             {
-                return Math.Sqrt(x * x + y * y);
+                return Math.Sqrt(X * X + Y * Y);
             }
         }
 
@@ -24,23 +26,23 @@ namespace ComputationalGeometry.Common
 
         public Vector2(double x, double y)
         {
-            this.x = x;
-            this.y = y;
+            this.X = x;
+            this.Y = y;
         }
 
         public static Vector2 operator +(Vector2 v1, Vector2 v2)
         {
-            return new Vector2(v1.x + v2.x, v1.y + v2.y);
+            return new Vector2(v1.X + v2.X, v1.Y + v2.Y);
         }
 
         public static Vector2 operator -(Vector2 v1, Vector2 v2)
         {
-            return new Vector2(v1.x - v2.x, v1.y - v2.y);
+            return new Vector2(v1.X - v2.X, v1.Y - v2.Y);
         }
 
         public static Vector2 operator *(double d, Vector2 v)
         {
-            return new Vector2(d * v.x, d * v.y);
+            return new Vector2(d * v.X, d * v.Y);
         }
         
         public static Vector2 operator *(Vector2 v, double d)
@@ -55,12 +57,12 @@ namespace ComputationalGeometry.Common
 
         public static double Dot(Vector2 v1, Vector2 v2)
         {
-            return v1.x * v2.x + v1.y * v2.y;
+            return v1.X * v2.X + v1.Y * v2.Y;
         }
 
         public override string ToString()
         {
-            return "(" + x.ToString() + ", " + y.ToString() + ")";
+            return "(" + X.ToString() + ", " + Y.ToString() + ")";
         }
     }
 }

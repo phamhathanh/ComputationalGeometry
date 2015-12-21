@@ -28,10 +28,10 @@ namespace ComputationalGeometry.TrapezoidalMap
             Vector2 origin = listEdges[0].Origin.Position;
             Vector2 twinOrigin = listEdges[0].Twin.Origin.Position;
 
-            double leftCoordinate = origin.x <= twinOrigin.x ? origin.x : twinOrigin.x;
-            double rightCoordinate = origin.x >= twinOrigin.x ? origin.x : twinOrigin.x;
-            double topCoordinate = origin.y >= twinOrigin.y ? origin.y : twinOrigin.y;
-            double bottomCoordinate = origin.y <= twinOrigin.y ? origin.y : twinOrigin.y;
+            double leftCoordinate = origin.X <= twinOrigin.X ? origin.X : twinOrigin.X;
+            double rightCoordinate = origin.X >= twinOrigin.X ? origin.X : twinOrigin.X;
+            double topCoordinate = origin.Y >= twinOrigin.Y ? origin.Y : twinOrigin.Y;
+            double bottomCoordinate = origin.Y <= twinOrigin.Y ? origin.Y : twinOrigin.Y;
 
             Trapezoid R = new Trapezoid();
             R.Leftp = new Vertex(leftCoordinate, topCoordinate);

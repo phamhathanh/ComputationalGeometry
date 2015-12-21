@@ -139,7 +139,7 @@ namespace ComputationalGeometry.MotionPlanning
         {
             Vector2 v1 = edge1.Vector,
                     v2 = edge2.Vector;
-            double crossProductZ = v1.x * v2.y - v1.y * v2.x;
+            double crossProductZ = v1.X * v2.Y - v1.Y * v2.X;
             if (crossProductZ > 0)
                 return 1;
             if (crossProductZ < 0)

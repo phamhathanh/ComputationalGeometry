@@ -54,8 +54,8 @@ namespace ComputationalGeometry.MotionPlanning
 
         public ITrapezoid PointLocation(Vector2 point)
         {
-            double x = point.x,
-                   y = point.y;
+            double x = point.X,
+                   y = point.Y;
 
             if (x < 0 || x > 4 || y < 0 || y > 4)
                 throw new ArgumentException("Point is not inside the rectangle.");
