@@ -36,6 +36,22 @@ namespace ComputationalGeometry.MotionPlanning
             }
         }
 
+        public IEnumerable<IVerticalEdge> VerticalEdges
+        {
+            get
+            {
+                return verticals;
+            }
+        }
+
+        public IEnumerable<IVertex> Vertices
+        {
+            get
+            {
+                return vertices;
+            }
+        }
+
         public ITrapezoid PointLocation(Vector2 point)
         {
             double x = point.x,

@@ -21,6 +21,11 @@ namespace ComputationalGeometry.MotionPlanning
                 var junction = CreateJunction(trapezoid);
                 junctionByTrapezoid.Add(trapezoid, junction);
             }
+
+            foreach (var vertical in trapezoidalMap.VerticalEdges)
+            {
+
+            }
         }
 
         private Junction CreateJunction(ITrapezoid trapezoid)

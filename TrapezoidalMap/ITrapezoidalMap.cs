@@ -20,6 +20,16 @@ namespace ComputationalGeometry.TrapezoidalMap
             get;
         }
 
+        IEnumerable<IVerticalEdge> VerticalEdges
+        {
+            get;
+        }
+
+        IEnumerable<IVertex> Vertices
+        {
+            get;
+        }
+
         ITrapezoid PointLocation(Vector2 point);
     }
 }
