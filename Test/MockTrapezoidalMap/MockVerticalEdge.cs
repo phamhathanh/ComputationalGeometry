@@ -6,7 +6,7 @@ namespace ComputationalGeometry.MotionPlanning
 {
     class MockVerticalEdge : IVerticalEdge
     {
-        internal MockTrapezoid[] lefts, rights;
+        internal MockTrapezoid left, right;
         internal MockVertex vertex;
 
         public double XPosition
@@ -25,19 +25,19 @@ namespace ComputationalGeometry.MotionPlanning
             }
         }
 
-        public IEnumerable<ITrapezoid> LeftTrapezoids
+        public ITrapezoid LeftTrapezoid
         {
             get
             {
-                return lefts;
+                return left;
             }
         }
 
-        public IEnumerable<ITrapezoid> RightTrapezoids
+        public ITrapezoid RightTrapezoid
         {
             get
             {
-                return rights;
+                return right;
             }
         }
     }

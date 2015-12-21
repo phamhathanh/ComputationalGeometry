@@ -9,7 +9,12 @@ namespace ComputationalGeometry.TrapezoidalMap
             get;
         }
 
-        IVerticalEdge Extension
+        IVerticalEdge UpperExtension
+        {
+            get;
+        }
+
+        IVerticalEdge LowerExtension
         {
             get;
         }

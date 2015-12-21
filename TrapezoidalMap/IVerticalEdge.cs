@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ComputationalGeometry.TrapezoidalMap
+﻿namespace ComputationalGeometry.TrapezoidalMap
 {
     public interface IVerticalEdge
     {
@@ -9,12 +7,12 @@ namespace ComputationalGeometry.TrapezoidalMap
             get;
         }
 
-        IEnumerable<ITrapezoid> LeftTrapezoids
+        ITrapezoid LeftTrapezoid
         {
             get;
         }
 
-        IEnumerable<ITrapezoid> RightTrapezoids
+        ITrapezoid RightTrapezoid
         {
             get;
         }

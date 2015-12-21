@@ -4,12 +4,12 @@ namespace ComputationalGeometry.TrapezoidalMap
 {
     public interface ITrapezoid
     {
-        IVerticalEdge LeftEdge
+        IEnumerable<IVerticalEdge> LeftEdges
         {
             get;
         }
 
-        IVerticalEdge RightEdge
+        IEnumerable<IVerticalEdge> RightEdges
         {
             get;
         }

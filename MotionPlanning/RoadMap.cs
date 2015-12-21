@@ -22,7 +22,7 @@ namespace ComputationalGeometry.MotionPlanning
                 junctionByTrapezoid.Add(trapezoid, junction);
             }
 
-            foreach (var vertical in trapezoidalMap.VerticalEdges)
+            foreach (var vertex in trapezoidalMap.Vertices)
             {
 
             }

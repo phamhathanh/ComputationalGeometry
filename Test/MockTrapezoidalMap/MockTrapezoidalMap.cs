@@ -99,9 +99,10 @@ namespace ComputationalGeometry.MotionPlanning
             for (int i = 0; i < 7; i++)
                 trapezoids[i] = new MockTrapezoid();
 
-            verticals = new MockVerticalEdge[3];
-            for (int i = 0; i < 3; i++)
+            verticals = new MockVerticalEdge[6];
+            for (int i = 0; i < 6; i++)
                 verticals[i] = new MockVerticalEdge();
+
 
 
             segments[0].bottoms = new[] { trapezoids[2] };
@@ -120,49 +121,81 @@ namespace ComputationalGeometry.MotionPlanning
             segments[2].right = vertices[2];
 
 
+
             vertices[0].position = new Vector2(1, 1);
-            vertices[0].extension = verticals[0];
+            vertices[0].upper = verticals[0];
+            vertices[0].lower = verticals[1];
 
             vertices[1].position = new Vector2(2, 3);
-            vertices[1].extension = verticals[1];
+            vertices[1].upper = verticals[2];
+            vertices[1].lower = verticals[3];
 
             vertices[2].position = new Vector2(3, 1);
-            vertices[2].extension = verticals[2];
+            vertices[2].upper = verticals[4];
+            vertices[2].lower = verticals[5];
 
 
-            trapezoids[0].top = null;
+
+            trapezoids[0].lefts = null;
+            trapezoids[0].rights = new[] { verticals[0], verticals[1] };
             trapezoids[0].bottom = null;
+            trapezoids[0].top = null;
 
-            trapezoids[1].top = null;
+            trapezoids[1].lefts = new[] { verticals[0] };
+            trapezoids[1].rights = new[] { verticals[2] };
             trapezoids[1].bottom = segments[0];
+            trapezoids[1].top = null;
 
-            trapezoids[2].top = segments[0];
+            trapezoids[2].lefts = new MockVerticalEdge[] {};
+            trapezoids[2].rights = new[] { verticals[3] };
             trapezoids[2].bottom = segments[2];
+            trapezoids[2].top = segments[0];
 
-            trapezoids[3].top = segments[2];
+            trapezoids[3].lefts = new[] { verticals[1] };
+            trapezoids[3].rights = new[] { verticals[5] };
             trapezoids[3].bottom = null;
+            trapezoids[3].top = segments[2];
 
-            trapezoids[4].top = null;
+            trapezoids[4].lefts = new[] { verticals[2] };
+            trapezoids[4].rights = new[] { verticals[4] };
             trapezoids[4].bottom = segments[1];
+            trapezoids[4].top = null;
 
-            trapezoids[5].bottom = segments[1];
-            trapezoids[5].top = segments[2];
+            trapezoids[5].lefts = new[] { verticals[3] };
+            trapezoids[5].rights = new MockVerticalEdge[] { };
+            trapezoids[5].bottom = segments[2];
+            trapezoids[5].top = segments[1];
 
-            trapezoids[6].top = segments[2];
+            trapezoids[0].lefts = new[] { verticals[4], verticals[5] };
+            trapezoids[0].rights = null;
             trapezoids[6].bottom = null;
+            trapezoids[6].top = segments[2];
+
 
 
             verticals[0].vertex = vertices[0];
-            verticals[0].lefts = new[] { trapezoids[0] };
-            verticals[0].rights = new[] { trapezoids[1], trapezoids[3] };
+            verticals[0].left = trapezoids[0];
+            verticals[0].right = trapezoids[1];
 
             verticals[1].vertex = vertices[0];
-            verticals[1].lefts = new[] { trapezoids[1], trapezoids[2] };
-            verticals[1].rights = new[] { trapezoids[4], trapezoids[5] };
+            verticals[1].left = trapezoids[0];
+            verticals[1].right = trapezoids[3];
 
             verticals[2].vertex = vertices[1];
-            verticals[2].lefts = new[] { trapezoids[4], trapezoids[3] };
-            verticals[2].rights = new[] { trapezoids[6] };
+            verticals[2].left = trapezoids[1];
+            verticals[2].right = trapezoids[4];
+
+            verticals[3].vertex = vertices[1];
+            verticals[3].left = trapezoids[2];
+            verticals[3].right = trapezoids[5];
+
+            verticals[4].vertex = vertices[2];
+            verticals[4].left = trapezoids[4];
+            verticals[4].right = trapezoids[6];
+
+            verticals[5].vertex = vertices[2];
+            verticals[5].left = trapezoids[3];
+            verticals[5].right = trapezoids[6];
         }
     }
 }
