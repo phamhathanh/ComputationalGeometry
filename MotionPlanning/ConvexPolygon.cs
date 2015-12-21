@@ -103,7 +103,29 @@ namespace ComputationalGeometry.MotionPlanning
             while (current != firstEdge);
         }
 
-        public static ConvexPolygon operator +(ConvexPolygon polygon1, ConvexPolygon polygon2)
+        public bool Overlaps(ConvexPolygon other)
+        {
+            foreach (var edge1 in this.Edges)
+                foreach (var edge2 in other.Edges)
+                    if (edge1.Intersects(edge2))
+                        return true;
+            return false;
+        }
+
+        public NotConvexPolygon UnionWith(ConvexPolygon other)
+        {
+            if (!this.Overlaps(other))
+                throw new ArgumentException("Polygons must overlap.");
+
+            foreach (var edge1 in this.Edges)
+                foreach (var edge2 in other.Edges)
+                    if (edge1.Intersects(edge2))
+                    {
+                        var intersection = edge1.GetIntersection(edge2);
+                    }
+        }
+
+        public static ConvexPolygon MinkowskiSum(ConvexPolygon polygon1, ConvexPolygon polygon2)
         {
             var resultPoints = new List<Vector2>();
             HalfEdge current1 = polygon1.firstEdge,
@@ -144,7 +166,7 @@ namespace ComputationalGeometry.MotionPlanning
 
         private static int CompareVectorsByAngleWithXAxis(Vector2 v1, Vector2 v2)
         {
-            double crossProductZ = v1.X * v2.Y - v1.Y * v2.X;
+            double crossProductZ = Vector2.Cross(v1, v2);
             if (crossProductZ > 0)
                 return 1;
             if (crossProductZ < 0)

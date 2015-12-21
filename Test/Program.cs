@@ -14,7 +14,7 @@ namespace ComputationalGeometry.Test
         {
             MotionPlannerTest();
 
-            Console.WriteLine("All tests were passed. OK.");
+            Console.WriteLine("OK, all tests were passed.");
             Console.ReadLine();
         }
 
@@ -23,6 +23,7 @@ namespace ComputationalGeometry.Test
             MinkowskiTriangleSumTest();
             MinkowskiRectangleSumTest();
             RoadMapTest();
+            UnionTest();
         }
 
         private static void MinkowskiTriangleSumTest()
@@ -34,7 +35,7 @@ namespace ComputationalGeometry.Test
             var polygon1 = new ConvexPolygon(new[] { v1, v2, v3 });
             var polygon2 = new ConvexPolygon(new[] { w1, w2, w3 });
             var polygon3 = new ConvexPolygon(new[] { u1, u2, u3, u4, u5, u6 });
-            var sum = polygon1 + polygon2;
+            var sum = ConvexPolygon.MinkowskiSum(polygon1, polygon2);
             Debug.Assert(sum.ToString() == polygon3.ToString());
         }
 
@@ -49,7 +50,7 @@ namespace ComputationalGeometry.Test
             var polygon1 = new ConvexPolygon(new[] { v1, v2, v3, v4 });
             var polygon2 = new ConvexPolygon(new[] { w1, w2, w3, w4 });
             var polygon3 = new ConvexPolygon(new[] { u1, u2, u3, u4 });
-            var sum = polygon1 + polygon2;
+            var sum = ConvexPolygon.MinkowskiSum(polygon1, polygon2);
             Debug.Assert(sum.ToString() == polygon3.ToString());
         }
 
@@ -74,6 +75,19 @@ namespace ComputationalGeometry.Test
                 result += point.ToString() + " ";
             string correct = "(0.5, 0.5) (0.5, 2) (1, 0.5) (2, 0.5) (3, 0.5) (3.5, 2) (3.5, 3.5) ";
             Debug.Assert(result == correct);
+        }
+
+        private static void UnionTest()
+        {
+            Vector2 v1 = new Vector2(0, -1), v2 = new Vector2(1, 0), v3 = new Vector2(0, 1),
+                    w1 = new Vector2(1, -1), w2 = new Vector2(1, 1), w3 = new Vector2(0, 0),
+                    u1 = new Vector2(1, -2), u2 = new Vector2(2, -1), u3 = new Vector2(2, 1),
+                    u4 = new Vector2(1, 2), u5 = new Vector2(0, 1), u6 = new Vector2(0, -1);
+            var polygon1 = new ConvexPolygon(new[] { v1, v2, v3 });
+            var polygon2 = new ConvexPolygon(new[] { w1, w2, w3 });
+            var polygon3 = new ConvexPolygon(new[] { u1, u2, u3, u4, u5, u6 });
+            var sum = ConvexPolygon.Union(polygon1, polygon2);
+            Console.WriteLine(sum.ToString());
         }
     }
 }

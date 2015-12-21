@@ -62,6 +62,31 @@ namespace ComputationalGeometry.Common
             return v1.X * v2.X + v1.Y * v2.Y;
         }
 
+        public static double Cross(Vector2 v1, Vector2 v2)
+        {
+            return v1.X * v2.Y - v1.Y * v2.X;
+        }
+
+        public static bool operator ==(Vector2 v1, Vector2 v2)
+        {
+            return v1.X == v2.X && v1.Y == v2.Y;
+        }
+
+        public static bool operator !=(Vector2 v1, Vector2 v2)
+        {
+            return !(v1 == v2);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Vector2 && (Vector2)obj == this;
+        }
+
+        public override int GetHashCode()
+        {
+            return X.GetHashCode() + 13 * Y.GetHashCode();
+        }
+
         public override string ToString()
         {
             return "(" + X.ToString() + ", " + Y.ToString() + ")";

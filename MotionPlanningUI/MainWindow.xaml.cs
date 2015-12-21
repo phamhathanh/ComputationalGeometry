@@ -1,5 +1,4 @@
 ﻿using ComputationalGeometry.MotionPlanning;
-using System.Text;
 using System.Windows;
 using System;
 using System.Windows.Shapes;
@@ -125,8 +124,8 @@ namespace MotionPlanningUI
             DoubleAnimation xAnimation = new DoubleAnimation(),
                             yAnimation = new DoubleAnimation();
 
-            Timeline.SetDesiredFrameRate(xAnimation, null);
-            Timeline.SetDesiredFrameRate(yAnimation, null);
+            Timeline.SetDesiredFrameRate(xAnimation, 300);
+            Timeline.SetDesiredFrameRate(yAnimation, 300);
 
             xAnimation.Duration = duration;
             yAnimation.Duration = duration;
@@ -149,7 +148,7 @@ namespace MotionPlanningUI
             robot.BeginAnimation(Canvas.LeftProperty, xAnimation);
             robot.BeginAnimation(Canvas.TopProperty, yAnimation);
 
-            //storyBoard.Begin();
+            storyBoard.Begin();
         }
     }
 }
