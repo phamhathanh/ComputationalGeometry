@@ -183,7 +183,7 @@ namespace ComputationalGeometry.MotionPlanning
             trapezoids[6].leftBound = 3;
             trapezoids[6].rightBound = 4;
             trapezoids[6].bottom = null;
-            trapezoids[6].top = segments[2];
+            trapezoids[6].top = null;
 
 
 

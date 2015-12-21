@@ -11,9 +11,11 @@ namespace ComputationalGeometry.MotionPlanning
     {
         // roadmap
 
-        public MotionPlanner(Polygon robot, IEnumerable<Polygon> obstacles)
+        public MotionPlanner(ConvexPolygon robot, IEnumerable<ConvexPolygon> obstacles)
         {
-
+            var cObstacles = new List<ConvexPolygon>();
+            foreach (var obstacle in obstacles)
+                cObstacles.Add(robot + obstacle);
         }
 
         private ITrapezoidalMap GenerateTrapezoidalMap()

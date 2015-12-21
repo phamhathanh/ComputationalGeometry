@@ -6,7 +6,12 @@ namespace ComputationalGeometry.MotionPlanning
     {
         private readonly Junction junction1, junction2;
 
-        public Road(Junction junction1, Junction junction2)
+        public static void Connect(Junction junction1, Junction junction2)
+        {
+            new Road(junction1, junction2);
+        }
+
+        private Road(Junction junction1, Junction junction2)
         {
             this.junction1 = junction1;
             this.junction2 = junction2;

@@ -37,34 +37,31 @@ namespace ComputationalGeometry.MotionPlanning
             }
         }
 
-        public ConvexPolygon(Vertex[] vertices)
+        public ConvexPolygon(Vector2[] points)
         {
-            if (vertices.Length < 3)
+            if (points.Length < 3)
                 throw new ArgumentException("Insufficent vertices.");
 
             var face = new Face();
 
-            Vertex firstVertex = vertices[0],
-                    secondVertex = vertices[1];
+            Vertex firstVertex = new Vertex(points[0]);
 
             this.firstEdge = new HalfEdge();
             firstEdge.Origin = firstVertex;
             firstEdge.Face = face;
             face.ConnectedEdge = firstEdge;
-
-            var previousVertex = secondVertex;
+            
             var previousEdge = firstEdge;
-            for (int i = 2; i < vertices.Length + 1; i++)
+            foreach (var point in points.Skip(1))
             {
                 var edge = new HalfEdge();
-                edge.Origin = previousVertex;
+                edge.Origin = new Vertex(point);
                 edge.Face = face;
+
                 edge.Previous = previousEdge;
                 previousEdge.Next = edge;
-
                 
 
-                previousVertex = vertices[i % vertices.Length];
                 previousEdge = edge;
             }
 
@@ -106,9 +103,9 @@ namespace ComputationalGeometry.MotionPlanning
             while (current != firstEdge);
         }
 
-        public static ConvexPolygon operator+(ConvexPolygon polygon1, ConvexPolygon polygon2)
+        public static ConvexPolygon operator +(ConvexPolygon polygon1, ConvexPolygon polygon2)
         {
-            var resultVertices = new List<Vertex>();
+            var resultPoints = new List<Vector2>();
             HalfEdge current1 = polygon1.firstEdge,
                      current2 = polygon2.firstEdge;
 
@@ -122,10 +119,10 @@ namespace ComputationalGeometry.MotionPlanning
             {
                 var vertex1 = current1.Origin;
                 var vertex2 = current2.Origin;
-                var newVertex = VerticesSum(vertex1, vertex2);
-                resultVertices.Add(newVertex);
+                var newPoint = vertex1.Position + vertex2.Position;
+                resultPoints.Add(newPoint);
 
-                Debug.Assert(resultVertices.Count <= resultVerticesBound);
+                Debug.Assert(resultPoints.Count <= resultVerticesBound);
 
                 int compareResult = CompareEdgesByAngleWithXAxis(current1, current2);
                 if (compareResult >= 0)
@@ -135,13 +132,7 @@ namespace ComputationalGeometry.MotionPlanning
             }
             while (current1 != polygon1.firstEdge || current2 != polygon2.firstEdge);
 
-            return new ConvexPolygon(resultVertices.ToArray());
-        }
-
-        private static Vertex VerticesSum(Vertex vertex1, Vertex vertex2)
-        {
-            Vector2 sumPosition = vertex1.Position + vertex2.Position;
-            return new Vertex(sumPosition);
+            return new ConvexPolygon(resultPoints.ToArray());
         }
 
         private static int CompareEdgesByAngleWithXAxis(HalfEdge edge1, HalfEdge edge2)
@@ -154,6 +145,16 @@ namespace ComputationalGeometry.MotionPlanning
             if (crossProductZ < 0)
                 return -1;
             return 0;
+        }
+
+        public ConvexPolygon PointReflection(Vector2 point)
+        {
+            var reflections = new List<Vector2>();
+            foreach (var vertex in Vertices)
+            {
+                reflections.Add(2 * point - vertex.Position);
+            }
+            return new ConvexPolygon(reflections.ToArray());
         }
 
         public override string ToString()

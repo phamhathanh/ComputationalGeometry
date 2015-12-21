@@ -1,8 +1,8 @@
 ﻿namespace ComputationalGeometry.Common
 {
-    public class Rectangle
+    public struct Rectangle
     {
-        private readonly double left, right, bottom, top;
+        public readonly double left, right, bottom, top;
 
         public Rectangle(double left, double right, double bottom, double top)
         {
