@@ -5,16 +5,38 @@ using System;
 using System.Windows.Shapes;
 using System.Windows.Media;
 using ComputationalGeometry.Common;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Controls;
+using System.Windows.Media.Animation;
 
 namespace MotionPlanningUI
 {
     public partial class MainWindow : Window
     {
+        private Vector2 reference;
+
         public MainWindow()
         {
             InitializeComponent();
 
+            reference = new Vector2(Canvas.GetLeft(robot), Canvas.GetTop(robot));
+
             DoStuffs();
+        }
+
+        private Vector2 Reference
+        {
+            get
+            {
+                return reference;
+            }
+            set
+            {
+                reference = value;
+                Canvas.SetLeft(robot, value.X);
+                Canvas.SetTop(robot, value.Y);
+            }
         }
 
         private void DoStuffs()
@@ -32,6 +54,11 @@ namespace MotionPlanningUI
             DrawPolygon(polygon1);
             DrawPolygon(polygon2);
             DrawPolygon(polygon3);
+
+            DrawPath(new[] { v0 + 125 * v1, w0 + 200 * w1, u0 + 150 * u1, v0 + 300 * v2 });
+
+            Reference = new Vector2(100, 300);
+            MoveRobotToPoint(new Vector2(500, 700));
         }
 
         private void DrawPolygon(ConvexPolygon polygon)
@@ -45,13 +72,84 @@ namespace MotionPlanningUI
 
             var polygonImage = new System.Windows.Shapes.Polygon()
             {
-                Fill = Brushes.Azure,
+                Fill = Brushes.Pink,
                 Stroke = Brushes.Black,
                 StrokeThickness = 3,
                 Points = pointCollection
             };
 
             mainCanvas.Children.Add(polygonImage);
+        }
+
+        private void DrawPath(IEnumerable<Vector2> path)
+        {
+            if (!path.Any())
+                throw new ArgumentException("Path cannot be empty.");
+
+            var figure = new PathFigure();
+
+            var start = path.First();
+            figure.StartPoint = PointFromVector(start);
+
+            foreach (var vector in path.Skip(1))
+            {
+                var point = PointFromVector(vector);
+                figure.Segments.Add(new LineSegment(point, true));
+            }
+
+            var geometry = new PathGeometry();
+            geometry.Figures.Add(figure);
+
+            var pathImage = new Path()
+            {
+                Stroke = Brushes.Black,
+                StrokeThickness = 3,
+                Data = geometry
+            };
+
+            mainCanvas.Children.Add(pathImage);
+        }
+
+        private Point PointFromVector(Vector2 vector)
+        {
+            return new Point(vector.X, vector.Y);
+        }
+
+        private void MoveRobotToPoint(Vector2 goal)
+        {
+            const double speed = 75;
+
+            var length = (goal - reference).Length;
+            var duration = new Duration(TimeSpan.FromSeconds(length / speed));
+            
+            DoubleAnimation xAnimation = new DoubleAnimation(),
+                            yAnimation = new DoubleAnimation();
+
+            Timeline.SetDesiredFrameRate(xAnimation, null);
+            Timeline.SetDesiredFrameRate(yAnimation, null);
+
+            xAnimation.Duration = duration;
+            yAnimation.Duration = duration;
+
+            var storyBoard = new Storyboard();
+            storyBoard.Duration = duration;
+
+            storyBoard.Children.Add(xAnimation);
+            storyBoard.Children.Add(yAnimation);
+
+            Storyboard.SetTarget(xAnimation, robot);
+            Storyboard.SetTarget(yAnimation, robot);
+            
+            Storyboard.SetTargetProperty(xAnimation, new PropertyPath("(Canvas.Left)"));
+            Storyboard.SetTargetProperty(yAnimation, new PropertyPath("(Canvas.Top)"));
+
+            xAnimation.To = goal.X;
+            yAnimation.To = goal.Y;
+
+            robot.BeginAnimation(Canvas.LeftProperty, xAnimation);
+            robot.BeginAnimation(Canvas.TopProperty, yAnimation);
+
+            //storyBoard.Begin();
         }
     }
 }
