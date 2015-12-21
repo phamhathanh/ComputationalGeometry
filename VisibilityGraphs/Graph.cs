@@ -81,6 +81,11 @@ namespace VisibilityGraphs
                 int v_int_u=0;
                 foreach (var item in v_int_T)
                 {
+                    if (v_double_min < 0 && v_double_D[item] > 0)
+                    {
+                        v_double_min = v_double_D[item];
+                        v_int_u = item;
+                    }
                     if (v_double_min >= v_double_D[item] && v_double_D[item] > 0)
                     {
                         v_double_min = v_double_D[item];
@@ -106,5 +111,6 @@ namespace VisibilityGraphs
             }
             return v_int_result;
         }
+
     }
 }

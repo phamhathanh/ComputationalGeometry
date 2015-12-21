@@ -50,6 +50,7 @@
             this.m_grv_toa_do = new System.Windows.Forms.DataGridView();
             this.X = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Y = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.m_cmd_add_pstart_pend = new DevExpress.XtraEditors.SimpleButton();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -75,7 +76,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(908, 456);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(908, 589);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // tableLayoutPanel2
@@ -90,7 +91,7 @@
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(175, 450);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(175, 583);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // tableLayoutPanel3
@@ -105,16 +106,16 @@
             this.tableLayoutPanel3.RowCount = 2;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(169, 219);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(169, 285);
             this.tableLayoutPanel3.TabIndex = 1;
             // 
             // m_cmd_clearObstacle
             // 
             this.m_cmd_clearObstacle.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_cmd_clearObstacle.Image = ((System.Drawing.Image)(resources.GetObject("m_cmd_clearObstacle.Image")));
-            this.m_cmd_clearObstacle.Location = new System.Drawing.Point(3, 112);
+            this.m_cmd_clearObstacle.Location = new System.Drawing.Point(3, 145);
             this.m_cmd_clearObstacle.Name = "m_cmd_clearObstacle";
-            this.m_cmd_clearObstacle.Size = new System.Drawing.Size(163, 104);
+            this.m_cmd_clearObstacle.Size = new System.Drawing.Size(163, 137);
             this.m_cmd_clearObstacle.TabIndex = 2;
             this.m_cmd_clearObstacle.Text = "Clear Obstacle";
             this.m_cmd_clearObstacle.Click += new System.EventHandler(this.m_cmd_clearObstacle_Click);
@@ -125,7 +126,7 @@
             this.m_cmd_addObstacle.Image = ((System.Drawing.Image)(resources.GetObject("m_cmd_addObstacle.Image")));
             this.m_cmd_addObstacle.Location = new System.Drawing.Point(3, 3);
             this.m_cmd_addObstacle.Name = "m_cmd_addObstacle";
-            this.m_cmd_addObstacle.Size = new System.Drawing.Size(163, 103);
+            this.m_cmd_addObstacle.Size = new System.Drawing.Size(163, 136);
             this.m_cmd_addObstacle.TabIndex = 1;
             this.m_cmd_addObstacle.Text = "Add Obstacle";
             this.m_cmd_addObstacle.Click += new System.EventHandler(this.m_cmd_addObstacle_Click);
@@ -135,16 +136,19 @@
             this.tableLayoutPanel4.ColumnCount = 1;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel4.Controls.Add(this.m_grp_pEnd, 0, 1);
-            this.tableLayoutPanel4.Controls.Add(this.m_cmd_findShortestPath, 0, 2);
             this.tableLayoutPanel4.Controls.Add(this.m_grp_pStart, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.m_cmd_findShortestPath, 0, 3);
+            this.tableLayoutPanel4.Controls.Add(this.m_cmd_add_pstart_pend, 0, 2);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 228);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 294);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 3;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(169, 219);
+            this.tableLayoutPanel4.RowCount = 4;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(169, 286);
             this.tableLayoutPanel4.TabIndex = 2;
             // 
             // m_grp_pEnd
@@ -154,9 +158,9 @@
             this.m_grp_pEnd.Controls.Add(this.m_txt_pE_y);
             this.m_grp_pEnd.Controls.Add(this.m_txt_pE_x);
             this.m_grp_pEnd.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.m_grp_pEnd.Location = new System.Drawing.Point(3, 76);
+            this.m_grp_pEnd.Location = new System.Drawing.Point(3, 74);
             this.m_grp_pEnd.Name = "m_grp_pEnd";
-            this.m_grp_pEnd.Size = new System.Drawing.Size(163, 67);
+            this.m_grp_pEnd.Size = new System.Drawing.Size(163, 65);
             this.m_grp_pEnd.TabIndex = 4;
             this.m_grp_pEnd.Text = "P_End";
             // 
@@ -198,7 +202,7 @@
             // 
             this.m_cmd_findShortestPath.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_cmd_findShortestPath.Image = ((System.Drawing.Image)(resources.GetObject("m_cmd_findShortestPath.Image")));
-            this.m_cmd_findShortestPath.Location = new System.Drawing.Point(3, 149);
+            this.m_cmd_findShortestPath.Location = new System.Drawing.Point(3, 216);
             this.m_cmd_findShortestPath.Name = "m_cmd_findShortestPath";
             this.m_cmd_findShortestPath.Size = new System.Drawing.Size(163, 67);
             this.m_cmd_findShortestPath.TabIndex = 2;
@@ -214,7 +218,7 @@
             this.m_grp_pStart.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_grp_pStart.Location = new System.Drawing.Point(3, 3);
             this.m_grp_pStart.Name = "m_grp_pStart";
-            this.m_grp_pStart.Size = new System.Drawing.Size(163, 67);
+            this.m_grp_pStart.Size = new System.Drawing.Size(163, 65);
             this.m_grp_pStart.TabIndex = 3;
             this.m_grp_pStart.Text = "P_Start";
             // 
@@ -254,10 +258,11 @@
             // 
             // m_pan_paint
             // 
+            this.m_pan_paint.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.m_pan_paint.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_pan_paint.Location = new System.Drawing.Point(365, 3);
             this.m_pan_paint.Name = "m_pan_paint";
-            this.m_pan_paint.Size = new System.Drawing.Size(540, 450);
+            this.m_pan_paint.Size = new System.Drawing.Size(540, 583);
             this.m_pan_paint.TabIndex = 2;
             this.m_pan_paint.Paint += new System.Windows.Forms.PaintEventHandler(this.m_pan_paint_Paint);
             // 
@@ -270,7 +275,7 @@
             this.m_grv_toa_do.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_grv_toa_do.Location = new System.Drawing.Point(184, 3);
             this.m_grv_toa_do.Name = "m_grv_toa_do";
-            this.m_grv_toa_do.Size = new System.Drawing.Size(175, 450);
+            this.m_grv_toa_do.Size = new System.Drawing.Size(175, 583);
             this.m_grv_toa_do.TabIndex = 3;
             // 
             // X
@@ -285,11 +290,22 @@
             this.Y.HeaderText = "Y";
             this.Y.Name = "Y";
             // 
+            // m_cmd_add_pstart_pend
+            // 
+            this.m_cmd_add_pstart_pend.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.m_cmd_add_pstart_pend.Image = ((System.Drawing.Image)(resources.GetObject("m_cmd_add_pstart_pend.Image")));
+            this.m_cmd_add_pstart_pend.Location = new System.Drawing.Point(3, 145);
+            this.m_cmd_add_pstart_pend.Name = "m_cmd_add_pstart_pend";
+            this.m_cmd_add_pstart_pend.Size = new System.Drawing.Size(163, 65);
+            this.m_cmd_add_pstart_pend.TabIndex = 5;
+            this.m_cmd_add_pstart_pend.Text = "Add P_Start P_End";
+            this.m_cmd_add_pstart_pend.Click += new System.EventHandler(this.m_cmd_add_pstart_pend_Click);
+            // 
             // ShortestPath
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(908, 456);
+            this.ClientSize = new System.Drawing.Size(908, 589);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "ShortestPath";
             this.Text = "Shortest Path";
@@ -333,6 +349,7 @@
         private System.Windows.Forms.DataGridView m_grv_toa_do;
         private System.Windows.Forms.DataGridViewTextBoxColumn X;
         private System.Windows.Forms.DataGridViewTextBoxColumn Y;
+        private DevExpress.XtraEditors.SimpleButton m_cmd_add_pstart_pend;
 
     }
 }

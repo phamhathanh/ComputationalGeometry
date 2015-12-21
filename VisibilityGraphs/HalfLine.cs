@@ -41,7 +41,7 @@ namespace VisibilityGraphs
             Edge v_edge_parallelOx = new Edge(m_point_pStart, new Point2D(m_point_pStart.X + 1, m_point_pStart.Y));
             Edge v_edge_hafl = new Edge(m_point_pStart, m_point_pEnd);
             double v_doub_cos = Edge.Cos(v_edge_parallelOx, v_edge_hafl);
-            if (m_point_pEnd.Y >= m_point_pStart.Y)
+            if (m_point_pEnd.Y > m_point_pStart.Y)
                 return Math.PI * 2 - Math.Acos(v_doub_cos);
             return Math.Acos(v_doub_cos);
         }
@@ -51,7 +51,7 @@ namespace VisibilityGraphs
             Edge v_edge_pStart = new Edge(m_point_pStart, v_edge.PointStart);
             Edge v_edge_pEnd = new Edge(m_point_pStart, v_edge.PointEnd);
             Edge v_edge_half = new Edge(m_point_pStart, m_point_pEnd);
-            if (Edge.Cos(v_edge_pStart, v_edge_half) > Edge.Cos(v_edge_pStart, v_edge_pEnd) && Edge.Cos(v_edge_pEnd, v_edge_half) > Edge.Cos(v_edge_pStart, v_edge_pEnd) && (Edge.Cos(v_edge_pStart, v_edge_half) > 0 || Edge.Cos(v_edge_pEnd, v_edge_half) > 0))
+            if (Math.Abs(Math.Acos(Edge.Cos(v_edge_pStart, v_edge_half)) - Math.Acos( Edge.Cos(v_edge_pStart, v_edge_pEnd)) +Math.Acos( Edge.Cos(v_edge_pEnd, v_edge_half))) < Math.Pow(10,-8))
             {
                 return true;
             }
