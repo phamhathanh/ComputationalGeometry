@@ -1,5 +1,6 @@
 ﻿using ComputationalGeometry.TrapezoidalMap;
 using System.Collections.Generic;
+using System;
 
 namespace ComputationalGeometry.MotionPlanning
 {
@@ -7,22 +8,7 @@ namespace ComputationalGeometry.MotionPlanning
     {
         internal MockSegment top, bottom;
         internal MockVerticalEdge[] lefts, rights;
-
-        public ISegment TopSegment
-        {
-            get
-            {
-                return top;
-            }
-        }
-
-        public ISegment BottomSegment
-        {
-            get
-            {
-                return bottom;
-            }
-        }
+        internal double leftBound, rightBound;
 
         public IEnumerable<IVerticalEdge> LeftEdges
         {
@@ -37,6 +23,38 @@ namespace ComputationalGeometry.MotionPlanning
             get
             {
                 return rights;
+            }
+        }
+
+        public double LeftBound
+        {
+            get
+            {
+                return leftBound;
+            }
+        }
+
+        public double RightBound
+        {
+            get
+            {
+                return rightBound;
+            }
+        }
+
+        public ISegment TopSegment
+        {
+            get
+            {
+                return top;
+            }
+        }
+
+        public ISegment BottomSegment
+        {
+            get
+            {
+                return bottom;
             }
         }
     }

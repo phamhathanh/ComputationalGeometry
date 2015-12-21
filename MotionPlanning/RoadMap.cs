@@ -38,8 +38,8 @@ namespace ComputationalGeometry.MotionPlanning
 
         private Vector2 GetCenterPoint(ITrapezoid trapezoid)
         {
-            double leftEdgeX = trapezoid.LeftEdge.XPosition,
-                rightEdgeX = trapezoid.RightEdge.XPosition,
+            double leftEdgeX = trapezoid.LeftBound,
+                rightEdgeX = trapezoid.RightBound,
                 centerX = (leftEdgeX + rightEdgeX) / 2;
 
             ISegment top = trapezoid.TopSegment,

@@ -138,36 +138,50 @@ namespace ComputationalGeometry.MotionPlanning
 
             trapezoids[0].lefts = null;
             trapezoids[0].rights = new[] { verticals[0], verticals[1] };
+            trapezoids[0].leftBound = 0;
+            trapezoids[0].rightBound = 1;
             trapezoids[0].bottom = null;
             trapezoids[0].top = null;
 
             trapezoids[1].lefts = new[] { verticals[0] };
             trapezoids[1].rights = new[] { verticals[2] };
+            trapezoids[1].leftBound = 1;
+            trapezoids[1].rightBound = 2;
             trapezoids[1].bottom = segments[0];
             trapezoids[1].top = null;
 
             trapezoids[2].lefts = new MockVerticalEdge[] {};
             trapezoids[2].rights = new[] { verticals[3] };
+            trapezoids[2].leftBound = 1;
+            trapezoids[2].rightBound = 2;
             trapezoids[2].bottom = segments[2];
             trapezoids[2].top = segments[0];
 
             trapezoids[3].lefts = new[] { verticals[1] };
             trapezoids[3].rights = new[] { verticals[5] };
+            trapezoids[3].leftBound = 1;
+            trapezoids[3].rightBound = 3;
             trapezoids[3].bottom = null;
             trapezoids[3].top = segments[2];
 
             trapezoids[4].lefts = new[] { verticals[2] };
             trapezoids[4].rights = new[] { verticals[4] };
+            trapezoids[4].leftBound = 2;
+            trapezoids[4].rightBound = 3;
             trapezoids[4].bottom = segments[1];
             trapezoids[4].top = null;
 
             trapezoids[5].lefts = new[] { verticals[3] };
             trapezoids[5].rights = new MockVerticalEdge[] { };
+            trapezoids[5].leftBound = 2;
+            trapezoids[5].rightBound = 3;
             trapezoids[5].bottom = segments[2];
             trapezoids[5].top = segments[1];
 
-            trapezoids[0].lefts = new[] { verticals[4], verticals[5] };
-            trapezoids[0].rights = null;
+            trapezoids[6].lefts = new[] { verticals[4], verticals[5] };
+            trapezoids[6].rights = null;
+            trapezoids[6].leftBound = 3;
+            trapezoids[6].rightBound = 4;
             trapezoids[6].bottom = null;
             trapezoids[6].top = segments[2];
 

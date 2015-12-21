@@ -14,6 +14,16 @@ namespace ComputationalGeometry.TrapezoidalMap
             get;
         }
 
+        double LeftBound
+        {
+            get;
+        }
+
+        double RightBound
+        {
+            get;
+        }
+
         ISegment BottomSegment
         {
             get;
