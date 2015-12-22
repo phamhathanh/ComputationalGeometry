@@ -10,7 +10,7 @@ namespace ComputationalGeometry.MotionPlanning
     {
         private RoadMap roadMap;
 
-        public MotionPlanner(ConvexPolygon robot, IEnumerable<ConvexPolygon> obstacles)
+        public MotionPlanner(IEnumerable<ConvexPolygon> obstacles, ConvexPolygon robot)
         {
             var reflection = robot.GetPointReflection(Vector2.Zero);
             var cObstacles = from obstacle in obstacles
@@ -20,6 +20,30 @@ namespace ComputationalGeometry.MotionPlanning
             var trapezoidalMap = GenerateTrapezoidalMap(union);
 
             var topRightOfObstacles = from obstacle in union
+                                      from point in obstacle.GetPointsAbove()
+                                      select point;
+
+            var forbiddenSpace = new HashSet<ITrapezoid>();
+            foreach (var trapezoid in trapezoidalMap.Trapezoids)
+            {
+                var top = trapezoid.TopSegment;
+                if (top == null)
+                    continue;
+                var topRight = top.RightVertex.Position;
+
+                var trapezoidIsObstacle = topRightOfObstacles.Contains(topRight);
+                if (trapezoidIsObstacle)
+                    forbiddenSpace.Add(trapezoid);
+            }
+
+            this.roadMap = new RoadMap(trapezoidalMap, forbiddenSpace);
+        }
+
+        public MotionPlanner(IEnumerable<SimplePolygon> obstacles)
+        {
+            var trapezoidalMap = GenerateTrapezoidalMap(obstacles);
+
+            var topRightOfObstacles = from obstacle in obstacles
                                       from point in obstacle.GetPointsAbove()
                                       select point;
 
@@ -72,7 +96,7 @@ namespace ComputationalGeometry.MotionPlanning
             // NOT TESTED
         }
 
-        private ITrapezoidalMap GenerateTrapezoidalMap(IEnumerable<ConvexPolygon> obstacles)
+        private ITrapezoidalMap GenerateTrapezoidalMap(IEnumerable<SimplePolygon> obstacles)
         {
             var edges = from obstacle in obstacles
                         from edge in obstacle.Edges

@@ -13,32 +13,16 @@ namespace MotionPlanningUI
 {
     public partial class MainWindow : Window
     {
-        private Vector2 reference;
+        private MotionPlanner planner;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            reference = new Vector2(Canvas.GetLeft(robot), Canvas.GetTop(robot));
-
-            DoStuffs();
+            Init();
         }
 
-        private Vector2 Reference
-        {
-            get
-            {
-                return reference;
-            }
-            set
-            {
-                reference = value;
-                Canvas.SetLeft(robot, value.X);
-                Canvas.SetTop(robot, value.Y);
-            }
-        }
-
-        private void DoStuffs()
+        private void Init()
         {
             Vector2 v0 = new Vector2(100, 150), w0 = new Vector2(600, 300), u0 = new Vector2(300, 500);
             Vector2 v1 = new Vector2(0, -1), v2 = new Vector2(1, 0), v3 = new Vector2(0, 1),
@@ -54,10 +38,7 @@ namespace MotionPlanningUI
             DrawPolygon(polygon2);
             DrawPolygon(polygon3);
 
-            DrawPath(new[] { v0 + 125 * v1, w0 + 200 * w1, u0 + 150 * u1, v0 + 300 * v2 });
-
-            Reference = new Vector2(100, 300);
-            MoveRobotToPoint(new Vector2(500, 700));
+            planner = new MotionPlanner();
         }
 
         private void DrawPolygon(ConvexPolygon polygon)
@@ -112,43 +93,6 @@ namespace MotionPlanningUI
         private Point PointFromVector(Vector2 vector)
         {
             return new Point(vector.X, vector.Y);
-        }
-
-        private void MoveRobotToPoint(Vector2 goal)
-        {
-            const double speed = 75;
-
-            var length = (goal - reference).Length;
-            var duration = new Duration(TimeSpan.FromSeconds(length / speed));
-            
-            DoubleAnimation xAnimation = new DoubleAnimation(),
-                            yAnimation = new DoubleAnimation();
-
-            Timeline.SetDesiredFrameRate(xAnimation, 300);
-            Timeline.SetDesiredFrameRate(yAnimation, 300);
-
-            xAnimation.Duration = duration;
-            yAnimation.Duration = duration;
-
-            var storyBoard = new Storyboard();
-            storyBoard.Duration = duration;
-
-            storyBoard.Children.Add(xAnimation);
-            storyBoard.Children.Add(yAnimation);
-
-            Storyboard.SetTarget(xAnimation, robot);
-            Storyboard.SetTarget(yAnimation, robot);
-            
-            Storyboard.SetTargetProperty(xAnimation, new PropertyPath("(Canvas.Left)"));
-            Storyboard.SetTargetProperty(yAnimation, new PropertyPath("(Canvas.Top)"));
-
-            xAnimation.To = goal.X;
-            yAnimation.To = goal.Y;
-
-            robot.BeginAnimation(Canvas.LeftProperty, xAnimation);
-            robot.BeginAnimation(Canvas.TopProperty, yAnimation);
-
-            storyBoard.Begin();
         }
     }
 }

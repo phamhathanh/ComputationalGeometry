@@ -161,6 +161,23 @@ namespace ComputationalGeometry.MotionPlanning
             return new ConvexPolygon(reflections.ToArray());
         }
 
+        public IEnumerable<Vector2> GetPointsAbove()
+        {
+            foreach (var edge in Edges)
+            {
+                var result1 = Vector2.CompareByAngleWithXAxis(Vector2.Up, edge.Vector);
+                var result2 = Vector2.CompareByAngleWithXAxis(Vector2.Down, edge.Vector);
+
+                if (result1 == 0)
+                    throw new NotImplementedException("Not yet implemented");
+                if (result2 == 0)
+                    throw new NotImplementedException("Not yet implemented");
+
+                if (result2 == -1)
+                    yield return edge.Origin.Position;
+            }
+        }
+
         public override string ToString()
         {
             var stringBuilder = new StringBuilder();
