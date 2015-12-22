@@ -41,6 +41,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConvexPolygon.cs" />
+    <Compile Include="MockTrapezoidalMap\MockSegment.cs" />
+    <Compile Include="MockTrapezoidalMap\MockTrapezoid.cs" />
+    <Compile Include="MockTrapezoidalMap\MockTrapezoidalMap.cs" />
+    <Compile Include="MockTrapezoidalMap\MockVertex.cs" />
+    <Compile Include="MockTrapezoidalMap\MockVerticalEdge.cs" />
     <Compile Include="MotionPlanner.cs" />
     <Compile Include="SimplePolygon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,11 +1,33 @@
-﻿namespace ComputationalGeometry.Common
+﻿using System;
+
+namespace ComputationalGeometry.Common
 {
     public struct Rectangle
     {
         public readonly double Left, Right, Bottom, Top;
 
+        public double Width
+        {
+            get
+            {
+                return Right - Left;
+            }
+        }
+
+        public double Height
+        {
+            get
+            {
+                return Top - Bottom;
+            }
+        }
+
         public Rectangle(double left, double right, double bottom, double top)
         {
+            bool isValid = left < right && bottom < top;
+            if (!isValid)
+                throw new ArgumentException("Parameters are incorrect.");
+
             this.Left = left;
             this.Right = right;
             this.Bottom = bottom;
@@ -13,12 +35,8 @@
         }
 
         public Rectangle(Vector2 lowerLeft, Vector2 upperRight)
-        {
-            this.Left = lowerLeft.X;
-            this.Right = upperRight.X;
-            this.Bottom = lowerLeft.Y;
-            this.Top = upperRight.Y;
-        }
+            : this(lowerLeft.X, upperRight.X, lowerLeft.Y, upperRight.Y)
+        { }
 
         public bool Contains(Vector2 point)
         {

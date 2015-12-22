@@ -1,47 +1,99 @@
-﻿using ComputationalGeometry.MotionPlanning;
-using System.Windows;
+﻿using ComputationalGeometry.Common;
+using ComputationalGeometry.MotionPlanning;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Shapes;
 using System.Windows.Media;
-using ComputationalGeometry.Common;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Controls;
-using System.Windows.Media.Animation;
 
 namespace MotionPlanningUI
 {
     public partial class MainWindow : Window
     {
         private MotionPlanner planner;
+        private double ratio;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            Init();
+            this.Loaded += (s,e) => Init();
         }
 
         private void Init()
         {
-            Vector2 v0 = new Vector2(100, 150), w0 = new Vector2(600, 300), u0 = new Vector2(300, 500);
-            Vector2 v1 = new Vector2(0, -1), v2 = new Vector2(1, 0), v3 = new Vector2(0, 1),
-                    w1 = new Vector2(1, -1), w2 = new Vector2(1, 1), w3 = new Vector2(0, 0),
-                    u1 = new Vector2(1, -2), u2 = new Vector2(2, -1), u3 = new Vector2(2, 1),
-                    u4 = new Vector2(1, 2), u5 = new Vector2(0, 1), u6 = new Vector2(0, -1);
-            var polygon1 = new ConvexPolygon(new[] { v0 + 100 * v1, v0 + 100 * v2, v0 + 100 * v3 });
-            var polygon2 = new ConvexPolygon(new[] { w0 + 100 * w1, w0 + 100 * w2, w0 + 100 * w3 });
-            var polygon3 = new ConvexPolygon(new[] { u0 + 100 * u1, u0 + 100 * u2, u0 + 100 * u3,
-                                                     u0 + 100 * u4, u0 + 100 * u5, u0 + 100 * u6 });
+            Vector2 v1 = new Vector2(1, 1), v2 = new Vector2(3, 1), v3 = new Vector2(2, 3);
+            var vertices = new[] { v1, v2, v3 };
+            var polygon1 = new SimplePolygon(vertices);
+
+
+            planner = new MotionPlanner(new[] { polygon1 });
+
+            Vector2 start = new Vector2(0.5, 0.5),
+                    goal = new Vector2(3.5, 3.5);
+            var path = planner.CalculatePath(start, goal);
 
             DrawPolygon(polygon1);
-            DrawPolygon(polygon2);
-            DrawPolygon(polygon3);
+            DrawPath(path);
+            DrawBox();
 
-            planner = new MotionPlanner();
+            ResizeToFitContent();
         }
 
-        private void DrawPolygon(ConvexPolygon polygon)
+        private Point PointFromVector(Vector2 vector)
+        {
+            return new Point(vector.X, vector.Y);
+        }
+
+        private void ResizeToFitContent()
+        {
+            if (planner == null)
+                return;
+
+            var box = planner.BoundingBox;
+            var width = box.Width;
+            var height = box.Height;
+
+            mainCanvas.Width = width;
+            mainCanvas.Height = height;
+
+            var window = (Grid)Application.Current.MainWindow.Content;
+            var windowWidth = window.ActualWidth;
+            var windowHeight = window.ActualHeight;
+
+            var xRatio = windowWidth / width;
+            var yRatio = windowHeight / height;
+            if (xRatio > yRatio)
+                ratio = xRatio;
+            else
+                ratio = yRatio;
+
+            RescaleCanvas();
+        }
+
+        private void DrawBox()
+        {
+            var box = planner.BoundingBox;
+            var width = box.Width;
+            var height = box.Height;
+
+            var rectangle = new System.Windows.Shapes.Rectangle()
+            {
+                Fill = Brushes.Azure,
+                Stroke = Brushes.Black,
+                StrokeThickness = 2,
+                Width = width,
+                Height = height                
+            };
+
+            Canvas.SetZIndex(rectangle, -1);
+            mainCanvas.Children.Add(rectangle);
+        }
+
+        private void DrawPolygon(SimplePolygon polygon)
         {
             var pointCollection = new PointCollection();
             foreach (var vertex in polygon.Vertices)
@@ -50,7 +102,7 @@ namespace MotionPlanningUI
                 pointCollection.Add(new Point(position.X, position.Y));
             }
 
-            var polygonImage = new System.Windows.Shapes.Polygon()
+            var polygonImage = new Polygon()
             {
                 Fill = Brushes.Pink,
                 Stroke = Brushes.Black,
@@ -90,9 +142,49 @@ namespace MotionPlanningUI
             mainCanvas.Children.Add(pathImage);
         }
 
-        private Point PointFromVector(Vector2 vector)
+        private void RescaleCanvas()
         {
-            return new Point(vector.X, vector.Y);
+            foreach (UIElement element in mainCanvas.Children)
+            {
+                if (element is Polygon)
+                    ScalePolygon((Polygon)element);
+                else if (element is Path)
+                    ScalePath((Path)element);
+                else if (element is System.Windows.Shapes.Rectangle)
+                    ScaleBox((System.Windows.Shapes.Rectangle)element);
+                else
+                    throw new InvalidOperationException("Something is wrong.");
+            }
+        }
+
+        private void ScaleBox(System.Windows.Shapes.Rectangle box)
+        {
+            box.Width *= ratio;
+            box.Height *= ratio;
+        }
+
+        private void ScalePolygon(Polygon polygon)
+        {
+            var newPoints = new PointCollection();
+            foreach (var point in polygon.Points)
+                newPoints.Add(ScalePoint(point));
+            polygon.Points = newPoints;
+        }
+
+        private void ScalePath(Path path)
+        {
+            var geometry = (PathGeometry)path.Data;
+            var figure = geometry.Figures.First();
+            figure.StartPoint = ScalePoint(figure.StartPoint);
+            foreach (LineSegment segment in figure.Segments)
+                segment.Point = ScalePoint(segment.Point);
+        }
+
+        private Point ScalePoint(Point original)
+        {
+            var newX = original.X * ratio;
+            var newY = original.Y * ratio;
+            return new Point(newX, newY);
         }
     }
 }

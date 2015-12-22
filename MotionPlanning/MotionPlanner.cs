@@ -9,6 +9,15 @@ namespace ComputationalGeometry.MotionPlanning
     public class MotionPlanner
     {
         private RoadMap roadMap;
+        private Rectangle boundingBox;
+
+        public Rectangle BoundingBox
+        {
+            get
+            {
+                return boundingBox;
+            }
+        }
 
         public MotionPlanner(IEnumerable<ConvexPolygon> obstacles, ConvexPolygon robot)
         {
@@ -18,6 +27,7 @@ namespace ComputationalGeometry.MotionPlanning
             var union = Union(cObstacles.ToArray());
 
             var trapezoidalMap = GenerateTrapezoidalMap(union);
+            this.boundingBox = trapezoidalMap.BoundingBox;
 
             var topRightOfObstacles = from obstacle in union
                                       from point in obstacle.GetPointsAbove()
@@ -42,6 +52,7 @@ namespace ComputationalGeometry.MotionPlanning
         public MotionPlanner(IEnumerable<SimplePolygon> obstacles)
         {
             var trapezoidalMap = GenerateTrapezoidalMap(obstacles);
+            this.boundingBox = trapezoidalMap.BoundingBox;
 
             var topRightOfObstacles = from obstacle in obstacles
                                       from point in obstacle.GetPointsAbove()
@@ -98,6 +109,8 @@ namespace ComputationalGeometry.MotionPlanning
 
         private ITrapezoidalMap GenerateTrapezoidalMap(IEnumerable<SimplePolygon> obstacles)
         {
+            return new MockTrapezoidalMap();
+
             var edges = from obstacle in obstacles
                         from edge in obstacle.Edges
                         select edge;
@@ -105,6 +118,11 @@ namespace ComputationalGeometry.MotionPlanning
             // generate bounding box
             // must handle empty case
             throw new NotImplementedException();
+        }
+
+        public IEnumerable<Vector2> CalculatePath(Vector2 start, Vector2 goal)
+        {
+            return roadMap.CalculatePath(start, goal);
         }
     }
 }
