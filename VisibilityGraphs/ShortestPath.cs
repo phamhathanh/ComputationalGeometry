@@ -84,14 +84,22 @@ namespace VisibilityGraphs
                         Point2D v_point2D = new Point2D(v_doub_x, v_doub_y);
                         if (m_list_point.Contains(v_point2D))
                         {
-                            MessageBox.Show("Nhập lại tọa độ!");
+                            MessageBox.Show("Tọa độ nhập không hợp lệ! \n(Chỉ xét đa giác là đa giác đơn)");
                             return;
+                        }
+                        foreach (var item in m_list_polygon)
+                        {
+                            if (item.BoundaryPolygonContain(v_point2D) || item.Contain(v_point2D))
+                            {
+                                MessageBox.Show("Tọa độ nhập không hợp lệ! \n(Chỉ xét đa giác là đa giác đơn)");
+                                return;
+                            }
                         }
                         v_list_point.Add(v_point2D);
                     }
                     else
                     {
-                        MessageBox.Show("Nhập lại tọa độ!");
+                        MessageBox.Show("Sai định dạng tọa độ!");
                         return;
                     }
                 }
@@ -122,11 +130,6 @@ namespace VisibilityGraphs
             }
         }
 
-        private void m_pan_paint_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
         private void DrawPolygon()
         {
             foreach (var item in m_list_polygon)
@@ -147,21 +150,11 @@ namespace VisibilityGraphs
              */
             try
             {
-                if (m_txt_pE_x.Text == "" || m_txt_pS_x.Text == "" || m_txt_pE_y.Text == "" || m_txt_pS_y.Text == "")
+                if (m_point_pStart == m_point_pEnd)
                 {
-                    MessageBox.Show("Nhập điểm bắt đầu và kết thúc");
+                    MessageBox.Show("Điểm xuất phát và và kết thúc chưa chính xác!");
                     return;
                 }
-                m_point_pStart = new Point2D(Convert.ToDouble(m_txt_pS_x.Text), Convert.ToDouble(m_txt_pS_y.Text)); // Khởi tạo pStart;
-                m_list_point.Add(m_point_pStart);
-                m_dic_pointKey[m_point_pStart] = m_i;
-                m_dic_keyPoint[m_i] = m_point_pStart;
-                m_i++;
-                m_point_pEnd = new Point2D(Convert.ToDouble(m_txt_pE_x.Text), Convert.ToDouble(m_txt_pE_y.Text));// Khởi tạo pEnd
-                m_list_point.Add(m_point_pEnd);
-                m_dic_pointKey[m_point_pEnd] = m_i;
-                m_dic_keyPoint[m_i] = m_point_pEnd;
-                m_i++;
                 m_graph_visibility = new Graph(m_list_point.Count); // khởi tạo đồ thị
                 foreach (var item in m_list_edge)
                 {
@@ -187,6 +180,7 @@ namespace VisibilityGraphs
                 {
                     DrawEdge(m_dic_keyPoint[v_list_shortestPath[i]], m_dic_keyPoint[v_list_shortestPath[i + 1]], m_p_shortestPath);
                 }
+                m_cmd_addObstacle.Enabled = false;
             }
             catch
             {
@@ -237,6 +231,18 @@ namespace VisibilityGraphs
                         v_list_point[j + 1] = item;
                         m_bool_check = true;
                     }
+                    if(Math.Abs(v_half_j.GetClockwiseAngle() - v_half_j_next.GetClockwiseAngle()) < Math.Pow(10,-8))
+                    {
+                        Edge v_edge_j = new Edge(v_point, v_list_point[j]);
+                        Edge v_edge_j_next = new Edge(v_point, v_list_point[j + 1]);
+                        if(v_edge_j.GetLength()> v_edge_j_next.GetLength())
+                        {
+                            Point2D item = v_list_point[j];
+                            v_list_point[j] = v_list_point[j + 1];
+                            v_list_point[j + 1] = item;
+                            m_bool_check = true;
+                        }
+                    }
                 }
                 if (m_bool_check == false)
                 {
@@ -262,25 +268,26 @@ namespace VisibilityGraphs
                 }
                 if (m_dic_pointKey[v_list_point[i]] != m_dic_pointKey[m_point_pStart] && m_dic_pointKey[v_list_point[i]] != m_dic_pointKey[m_point_pEnd])
                 {
-                    HalfLine v_hafl_i = new HalfLine(v_point, v_list_point[i]);
-                    HalfLine v_hafl_Start = new HalfLine(v_point, m_dic_pointEdge[v_list_point[i]].PointStart);
-                    HalfLine v_hafl_End = new HalfLine(v_point, m_dic_pointEdge[v_list_point[i]].PointEnd);
-                    if (v_hafl_Start.GetClockwiseAngle() < v_hafl_i.GetClockwiseAngle())
+                    Edge v_edge_i = new Edge(new Point2D(0, 0), new Point2D(v_point.Y - v_list_point[i].Y,v_list_point[i].X- v_point.X));
+                    Edge v_edge_start = new Edge(v_list_point[i], m_dic_pointEdge[v_list_point[i]].PointStart);
+                    Edge v_edge_end = new Edge(v_list_point[i], m_dic_pointEdge[v_list_point[i]].PointEnd);
+                    if(v_edge_i * v_edge_start > 0)
                     {
                         v_list_edge.Add(new Edge(v_list_point[i], m_dic_pointEdge[v_list_point[i]].PointStart));
                     }
                     else
                     {
-                        v_list_edge.Remove(new Edge( m_dic_pointEdge[v_list_point[i]].PointStart,v_list_point[i]));
+                        v_list_edge.Remove(new Edge(m_dic_pointEdge[v_list_point[i]].PointStart, v_list_point[i]));
                     }
-                    if (v_hafl_End.GetClockwiseAngle() < v_hafl_i.GetClockwiseAngle())
+                    if (v_edge_i * v_edge_end > 0)
                     {
                         v_list_edge.Add(new Edge(v_list_point[i], m_dic_pointEdge[v_list_point[i]].PointEnd));
                     }
                     else
                     {
-                        v_list_edge.Remove(new Edge( m_dic_pointEdge[v_list_point[i]].PointEnd,v_list_point[i]));
+                        v_list_edge.Remove(new Edge(m_dic_pointEdge[v_list_point[i]].PointEnd, v_list_point[i]));
                     }
+                    
                     SortList(ref v_list_edge, v_point);
                 }
             }
@@ -367,6 +374,13 @@ namespace VisibilityGraphs
 
         private void m_cmd_clearObstacle_Click(object sender, EventArgs e)
         {
+            Clear();
+            m_cmd_addObstacle.Enabled = true;
+            m_cmd_add_pstart_pend.Enabled = true;
+            m_pan_paint.Controls.Clear();
+        }
+        public void Clear()
+        {
             m_list_edge.Clear();
             m_list_point.Clear();
             m_list_polygon.Clear();
@@ -375,10 +389,15 @@ namespace VisibilityGraphs
             m_dic_pointPolygon.Clear();
             m_dic_pointEdge.Clear();
             m_dic_pointIsVisible.Clear();
+            m_txt_pE_x.Text = "";
+            m_txt_pE_y.Text = "";
+            m_txt_pS_x.Text = "";
+            m_txt_pS_y.Text = "";
+            m_point_pEnd = new Point2D(0, 0);
+            m_point_pStart = new Point2D(0, 0);
             m_i = 0;
-            m_pan_paint.Invalidate();
+            g.Clear(SystemColors.ControlLightLight);
         }
-
         private void m_txt_pS_x_KeyPress(object sender, KeyPressEventArgs e)
         {
             char decimalChar = '.';
@@ -425,6 +444,60 @@ namespace VisibilityGraphs
             {
                 e.Handled = true;
             }
+        }
+
+        private void m_cmd_add_pstart_pend_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (m_txt_pE_x.Text == "" || m_txt_pS_x.Text == "" || m_txt_pE_y.Text == "" || m_txt_pS_y.Text == "")
+                {
+                    MessageBox.Show("Nhập điểm bắt đầu và kết thúc");
+                    return;
+                }
+                Point2D v_point_pStart = new Point2D(Convert.ToDouble(m_txt_pS_x.Text), Convert.ToDouble(m_txt_pS_y.Text)); // Khởi tạo pStart;
+                Point2D v_point_pEnd = new Point2D(Convert.ToDouble(m_txt_pE_x.Text), Convert.ToDouble(m_txt_pE_y.Text));// Khởi tạo pEnd
+                if (v_point_pStart == v_point_pEnd)
+                {
+                    MessageBox.Show("Điểm xuất phát và và kết thúc chưa chính xác!");
+                    return;
+                }
+
+                m_point_pStart = v_point_pStart;
+                m_list_point.Add(m_point_pStart);
+                m_dic_pointKey[m_point_pStart] = m_i;
+                m_dic_keyPoint[m_i] = m_point_pStart;
+                m_i++;
+                m_point_pEnd = v_point_pEnd;
+                m_list_point.Add(m_point_pEnd);
+                m_dic_pointKey[m_point_pEnd] = m_i;
+                m_dic_keyPoint[m_i] = m_point_pEnd;
+                m_i++;
+                m_cmd_add_pstart_pend.Enabled = false;
+                AddLabel(m_point_pStart, m_point_pEnd);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Đã xảy ra lỗi!");
+            }
+
+        }
+        private void AddLabel(Point2D v_pstart,Point2D v_pend)
+        {
+            Label v_lab_pstart = new Label();
+            v_lab_pstart.Text = "P_Start";
+            v_lab_pstart.Location = new System.Drawing.Point(Convert.ToInt16(v_pstart.X), Convert.ToInt16(v_pstart.Y));
+            m_pan_paint.Controls.Add(v_lab_pstart);
+            Label v_lab_pend = new Label();
+            v_lab_pend.Text = "P_End";
+            v_lab_pend.Location = new System.Drawing.Point(Convert.ToInt16(v_pend.X), Convert.ToInt16(v_pend.Y));
+            m_pan_paint.Controls.Add(v_lab_pend);
+
+        }
+
+        private void m_pan_paint_Paint(object sender, PaintEventArgs e)
+        {
+            DrawPolygon();
         }
 
     }

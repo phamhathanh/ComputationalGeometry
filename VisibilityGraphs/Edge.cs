@@ -77,11 +77,17 @@ namespace VisibilityGraphs
 
         public bool Intersected(Polygon v_polygon)
         {
-            for (int i = 0; i < v_polygon.GetBoundaryPolygon().Count; i++)
+            List<Point2D> v_point_polygon = v_polygon.ListPointOfPolygon;
+            for (int i = 0; i < v_point_polygon.Count; i++)
             {
-                if (this.Intersected(v_polygon.GetBoundaryPolygon()[i]))
+                for (int j = i+1; j < v_point_polygon.Count; j++)
                 {
-                    return true;
+                    Edge v_edge = new Edge(v_point_polygon[i], v_point_polygon[j]);
+                    if(this.Intersected(v_edge))
+                    {
+                        return true;
+                    }
+                    
                 }
             }
             return false;

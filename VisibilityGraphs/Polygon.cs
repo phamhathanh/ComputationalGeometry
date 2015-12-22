@@ -43,13 +43,47 @@ namespace VisibilityGraphs
          */
         public List<Edge> GetBoundaryPolygon()
         {
-            List<Edge> v_list_boundaryNode = new List<Edge>();
+            List<Edge> v_list_boundaryEdge = new List<Edge>();
             for (int i = 0; i < NodeCount; i++)
             {
-                v_list_boundaryNode.Add(new Edge(m_list_node[i % NodeCount], m_list_node[(i + 1) % NodeCount]));
+                v_list_boundaryEdge.Add(new Edge(m_list_node[i % NodeCount], m_list_node[(i + 1) % NodeCount]));
             }
-            return v_list_boundaryNode;
+            return v_list_boundaryEdge;
         }
+        public bool BoundaryPolygonContain(Point2D v_point)
+        {
+            List<Edge> v_list_boundaryEdge = GetBoundaryPolygon();
+            for (int i = 0; i < v_list_boundaryEdge.Count; i++)
+            {
+                if(v_list_boundaryEdge[i].Contain(v_point))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public bool Contain(Point2D v_point)
+        {
+            List<Edge> v_list_boundaryEdge = GetBoundaryPolygon();
+            for (int i = 0; i < m_list_node.Count; i++)
+            {
+                int v_int_dem = 0;
+                HalfLine v_hafl = new HalfLine(m_list_node[i], v_point);
+                foreach (var item in v_list_boundaryEdge)
+                {
+                    if (!v_hafl.Intersected(item))
+                    {
+                        v_int_dem++;
+                    }
+                }
+                if(v_int_dem  == v_list_boundaryEdge.Count)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public PointF[] Draw()
         {
             PointF[] v_arr_pointF = new PointF[this.NodeCount];
