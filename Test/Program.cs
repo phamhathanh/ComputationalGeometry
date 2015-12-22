@@ -37,6 +37,11 @@ namespace ComputationalGeometry.Test
             var polygon3 = new ConvexPolygon(new[] { u1, u2, u3, u4, u5, u6 });
             var sum = ConvexPolygon.MinkowskiSum(polygon1, polygon2);
             Debug.Assert(sum.ToString() == polygon3.ToString());
+
+            Debug.Assert(polygon1.ContainsPoint(new Vector2(0.5, 0.25)));
+            Debug.Assert(!polygon1.ContainsPoint(new Vector2(2, 4)));
+            Debug.Assert(!polygon1.ContainsPoint(v1));
+            Debug.Assert(!polygon1.ContainsPoint((v1 + v2)/2));
         }
 
         private static void MinkowskiRectangleSumTest()
@@ -73,6 +78,9 @@ namespace ComputationalGeometry.Test
             string result = "";
             foreach (var point in path)
                 result += point.ToString() + " ";
+
+
+
             string correct = "(0.5, 0.5) (0.5, 2) (1, 0.5) (2, 0.5) (3, 0.5) (3.5, 2) (3.5, 3.5) ";
             Debug.Assert(result == correct);
         }
@@ -86,7 +94,7 @@ namespace ComputationalGeometry.Test
             var polygon1 = new ConvexPolygon(new[] { v1, v2, v3 });
             var polygon2 = new ConvexPolygon(new[] { w1, w2, w3 });
             var polygon3 = new ConvexPolygon(new[] { u1, u2, u3, u4, u5, u6 });
-            var sum = ConvexPolygon.Union(polygon1, polygon2);
+            var sum = polygon1.UnionWith(polygon2);
             Console.WriteLine(sum.ToString());
         }
     }

@@ -42,7 +42,7 @@
   <ItemGroup>
     <Compile Include="ConvexPolygon.cs" />
     <Compile Include="MotionPlanner.cs" />
-    <Compile Include="Polygon.cs" />
+    <Compile Include="SimplePolygon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoadMap.cs" />
     <Compile Include="Road.cs" />

@@ -56,7 +56,7 @@ namespace ComputationalGeometry.MotionPlanning
                     if (!current.Overlaps(polygon))
                         continue;
 
-                    current = current.UnionWith(polygon);
+                    current = (ConvexPolygon)current.UnionWith(polygon);
                     isMerged = true;
 
                     output.Remove(polygon);

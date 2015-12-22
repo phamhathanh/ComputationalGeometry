@@ -8,121 +8,35 @@ using System.Diagnostics;
 
 namespace ComputationalGeometry.MotionPlanning
 {
-    public class ConvexPolygon
+    public class ConvexPolygon : SimplePolygon
     {
-        protected HalfEdge firstEdge;
-
-        public IEnumerable<HalfEdge> Edges
+        public ConvexPolygon(Vector2[] points) : base(points)
         {
-            get
+            if (!PolygonIsConvexAndHasSortedVertices())
             {
-                Debug.Assert(firstEdge != null);
-
-                var currentEdge = firstEdge;
-                do
-                {
-                    yield return currentEdge;
-                    currentEdge = GetNextEdge(currentEdge);
-                }
-                while (currentEdge != firstEdge);
+                var errorMessage = "Vertices must be listed in counterclockwise order,"
+                                + " starting from the vertex with the smallest y-coordinate"
+                                + " (and smallest x-coordinate in case of ties)";
+                throw new ArgumentException(errorMessage);
             }
         }
 
-        public IEnumerable<Vertex> Vertices
-        {
-            get
-            {
-                foreach (var edge in Edges)
-                    yield return edge.Origin;
-            }
-        }
-
-        public ConvexPolygon(Vector2[] points)
-        {
-            if (points.Length < 3)
-                throw new ArgumentException("Insufficent vertices.");
-
-            var face = new Face();
-
-            Vertex firstVertex = new Vertex(points[0]);
-
-            this.firstEdge = new HalfEdge();
-            firstEdge.Origin = firstVertex;
-            firstEdge.Face = face;
-            face.ConnectedEdge = firstEdge;
-
-            var previousEdge = firstEdge;
-            foreach (var point in points.Skip(1))
-            {
-                var edge = new HalfEdge();
-                edge.Origin = new Vertex(point);
-                edge.Face = face;
-
-                edge.Previous = previousEdge;
-                previousEdge.Next = edge;
-
-
-                previousEdge = edge;
-            }
-
-            firstEdge.Previous = previousEdge;
-            previousEdge.Next = firstEdge;
-
-            Validate();
-        }
-
-        private HalfEdge GetNextEdge(HalfEdge current)
-        {
-            try
-            {
-                return current.Next;
-            }
-            catch (NullReferenceException)
-            {
-                throw new ArgumentNullException("Edges are not closing.");
-            }
-        }
-
-        private void Validate()
+        private bool PolygonIsConvexAndHasSortedVertices()
         {
             HalfEdge current = firstEdge;
             do
             {
-                HalfEdge next = current.Next;
+                HalfEdge next = GetNextEdge(current);
 
-                var errorMessage = "Vertices must be listed in counterclockwise order,"
-                                + " starting from the vertex with the smallest y-coordinate"
-                                + " (and smallest x-coordinate in case of ties)";
-
-                var compareResult = CompareEdgesByAngleWithXAxis(current, next);
+                var compareResult = Vector2.CompareByAngleWithXAxis(current.Vector, next.Vector);
                 if (compareResult < 0)
-                    throw new ArgumentException(errorMessage);
+                    return false;
 
                 current = next;
             }
             while (current != firstEdge);
-        }
 
-        public bool Overlaps(ConvexPolygon other)
-        {
-            foreach (var edge1 in this.Edges)
-                foreach (var edge2 in other.Edges)
-                    if (edge1.Intersects(edge2))
-                        return true;
-            return false;
-        }
-
-        public NotConvexPolygon UnionWith(ConvexPolygon other)
-        {
-            if (!this.Overlaps(other))
-                throw new ArgumentException("Polygons must overlap.");
-
-            foreach (var edge1 in this.Edges)
-                foreach (var edge2 in other.Edges)
-                    if (edge1.Intersects(edge2))
-                    {
-                        var intersection = edge1.GetIntersection(edge2);
-                    }
+            return true;
         }
 
         public static ConvexPolygon MinkowskiSum(ConvexPolygon polygon1, ConvexPolygon polygon2)
@@ -146,50 +60,23 @@ namespace ComputationalGeometry.MotionPlanning
 
                 Debug.Assert(resultPoints.Count <= resultVerticesBound);
 
-                int compareResult = CompareEdgesByAngleWithXAxis(current1, current2);
+                int compareResult = Vector2.CompareByAngleWithXAxis(current1.Vector, current2.Vector);
                 if (compareResult >= 0)
-                    current1 = current1.Next;
+                    current1 = polygon1.GetNextEdge(current1);
                 if (compareResult <= 0)
-                    current2 = current2.Next;
+                    current2 = polygon2.GetNextEdge(current2);
             }
             while (current1 != polygon1.firstEdge || current2 != polygon2.firstEdge);
 
             return new ConvexPolygon(resultPoints.ToArray());
         }
 
-        private static int CompareEdgesByAngleWithXAxis(HalfEdge edge1, HalfEdge edge2)
-        {
-            Vector2 v1 = edge1.Vector,
-                    v2 = edge2.Vector;
-            return CompareVectorsByAngleWithXAxis(v1, v2);
-        }
-
-        private static int CompareVectorsByAngleWithXAxis(Vector2 v1, Vector2 v2)
-        {
-            double crossProductZ = Vector2.Cross(v1, v2);
-            if (crossProductZ > 0)
-                return 1;
-            if (crossProductZ < 0)
-                return -1;
-            return 0;
-        }
-
-        public ConvexPolygon GetPointReflection(Vector2 point)
-        {
-            var reflections = new List<Vector2>();
-            foreach (var vertex in Vertices)
-            {
-                reflections.Add(2 * point - vertex.Position);
-            }
-            return new ConvexPolygon(reflections.ToArray());
-        }
-
         public IEnumerable<Vector2> GetPointsAbove()
         {
             foreach (var edge in Edges)
             {
-                var result1 = CompareVectorsByAngleWithXAxis(Vector2.Up, edge.Vector);
-                var result2 = CompareVectorsByAngleWithXAxis(Vector2.Down, edge.Vector);
+                var result1 = Vector2.CompareByAngleWithXAxis(Vector2.Up, edge.Vector);
+                var result2 = Vector2.CompareByAngleWithXAxis(Vector2.Down, edge.Vector);
                 
                 if (result1 == -1)
                     continue;
@@ -204,16 +91,6 @@ namespace ComputationalGeometry.MotionPlanning
 
                 yield break;
             }
-        }
-
-        public override string ToString()
-        {
-            var stringBuilder = new StringBuilder();
-
-            foreach (var vertex in Vertices)
-                stringBuilder.Append(vertex.ToString() + " ");
-
-            return stringBuilder.ToString();
         }
     }
 }

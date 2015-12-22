@@ -67,6 +67,16 @@ namespace ComputationalGeometry.Common
             return v1.X * v2.Y - v1.Y * v2.X;
         }
 
+        public static int CompareByAngleWithXAxis(Vector2 v1, Vector2 v2)
+        {
+            double crossProductZ = Cross(v1, v2);
+            if (crossProductZ > 0)
+                return 1;
+            if (crossProductZ < 0)
+                return -1;
+            return 0;
+        }
+
         public static bool operator ==(Vector2 v1, Vector2 v2)
         {
             return v1.X == v2.X && v1.Y == v2.Y;

@@ -41,15 +41,15 @@ namespace ComputationalGeometry.Common
             double crossProductZ = Vector2.Cross(u, v);
 
             if (crossProductZ == 0)
-                return true;
+                return false;
 
             double k = Vector2.Cross(v0 - u0, u) / crossProductZ,
                    l = Vector2.Cross(v0 - u0, v) / crossProductZ;
 
             if (k <= 0 || k >= 1 || l <= 0 || l >= 1)
-                return true;
+                return false;
 
-            return false;
+            return true;
         }
 
         public Vector2 GetIntersection(HalfEdge other)
