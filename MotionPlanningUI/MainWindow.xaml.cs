@@ -57,20 +57,17 @@ namespace MotionPlanningUI
             var width = box.Width;
             var height = box.Height;
 
-            mainCanvas.Width = width;
-            mainCanvas.Height = height;
-
             var window = (Grid)Application.Current.MainWindow.Content;
             var windowWidth = window.ActualWidth;
             var windowHeight = window.ActualHeight;
 
             var xRatio = windowWidth / width;
             var yRatio = windowHeight / height;
-            if (xRatio > yRatio)
+            if (xRatio < yRatio)
                 ratio = xRatio;
             else
                 ratio = yRatio;
-
+            
             RescaleCanvas();
         }
 
