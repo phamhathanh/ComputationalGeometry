@@ -109,15 +109,22 @@ namespace ComputationalGeometry.MotionPlanning
 
         private ITrapezoidalMap GenerateTrapezoidalMap(IEnumerable<SimplePolygon> obstacles)
         {
-            return new MockTrapezoidalMap();
-
             var edges = from obstacle in obstacles
                         from edge in obstacle.Edges
                         select edge;
 
-            // generate bounding box
+            var vertexByVector = new Dictionary<Vector2, TrapezoidalMap.Vertex>();
+            foreach (var edge in edges)
+            {
+                vertexByVector.Add(edge.Origin.Position, new TrapezoidalMap.Vertex(edge.Origin.Position.X, edge.Origin.Position.Y));
+            }
+
+            var segments = from edge in edges
+                           select new TrapezoidalMap.Segment(vertexByVector[edge.Origin.Position], vertexByVector[edge.End.Position]);
+
+            TrapezoidalMap1 trapezoidalMap = new TrapezoidalMap1(segments.ToList());
             // must handle empty case
-            throw new NotImplementedException();
+            return trapezoidalMap;
         }
 
         public IEnumerable<Vector2> CalculatePath(Vector2 start, Vector2 goal)

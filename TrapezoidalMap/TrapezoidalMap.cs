@@ -5,7 +5,7 @@ using System;
 
 namespace ComputationalGeometry.TrapezoidalMap
 {
-    public class TrapezoidalMap : ITrapezoidalMap
+    public class TrapezoidalMap1 : ITrapezoidalMap
     {
         Node Root = new Node();
         private Rectangle boundingBox;
@@ -14,9 +14,27 @@ namespace ComputationalGeometry.TrapezoidalMap
         {
             get
             {
-                throw new NotImplementedException();
+                foreach (var node in AllNodes())
+                {
+                    if (node.IsTrapezoid)
+                        yield return ((TrapezoidalNode)node).Trapezoid;
+                }
             }
         }
+
+        private IEnumerable<Node> AllNodes()
+        {
+            var queue = new Queue<Node>();
+            queue.Enqueue(Root);
+            while (queue.Count > 0)
+            {
+                var item = queue.Dequeue();
+                yield return item;
+                queue.Enqueue(item.LeftChildren);
+                queue.Enqueue(item.RightChildren);
+            }
+        }
+
 
         public IEnumerable<ISegment> Segments
         {
@@ -54,7 +72,7 @@ namespace ComputationalGeometry.TrapezoidalMap
         /// Construct TrapezoidalMap
         /// </summary>
 
-        public TrapezoidalMap(List<Segment> segments)
+        public TrapezoidalMap1(List<Segment> segments)
         {
             int n = segments.Count();
             IEnumerable<int> RandomPermutation = new RandomPermutation(n);
@@ -658,9 +676,12 @@ namespace ComputationalGeometry.TrapezoidalMap
                 }
 
             }
+
+            foreach (Vertex vertex in Vertices)
+                vertex.SetEdges();
         }
 
-        public TrapezoidalMap()
+        public TrapezoidalMap1()
         {
         }
 
