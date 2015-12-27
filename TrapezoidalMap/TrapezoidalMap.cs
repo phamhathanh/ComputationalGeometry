@@ -5,7 +5,7 @@ using System;
 
 namespace ComputationalGeometry.TrapezoidalMap
 {
-    public class TrapezoidalMap1 : ITrapezoidalMap
+    public class TrapezoidalMap : ITrapezoidalMap
     {
         Node Root = new Node();
         private Rectangle boundingBox;
@@ -35,12 +35,15 @@ namespace ComputationalGeometry.TrapezoidalMap
             }
         }
 
-
         public IEnumerable<ISegment> Segments
         {
             get
             {
-                throw new NotImplementedException();
+                foreach (var node in AllNodes())
+                {
+                    if (node.IsSegment)
+                        yield return ((SegmentNode)node).segment;
+                }
             }
         }
 
@@ -56,7 +59,15 @@ namespace ComputationalGeometry.TrapezoidalMap
         {
             get
             {
-                throw new NotImplementedException();
+                foreach (var node in AllNodes())
+                {
+                    if (node.IsVertex)
+                    {
+                        var vertex = ((VertexNode)node).Vertex;
+                        yield return vertex.LowerExtension;
+                        yield return vertex.UpperExtension;
+                    }
+                }
             }
         }
 
@@ -64,7 +75,11 @@ namespace ComputationalGeometry.TrapezoidalMap
         {
             get
             {
-                throw new NotImplementedException();
+                foreach (var node in AllNodes())
+                {
+                    if (node.IsVertex)
+                        yield return ((VertexNode)node).Vertex; 
+                }
             }
         }
 
@@ -72,7 +87,7 @@ namespace ComputationalGeometry.TrapezoidalMap
         /// Construct TrapezoidalMap
         /// </summary>
 
-        public TrapezoidalMap1(List<Segment> segments)
+        public TrapezoidalMap(List<Common.Segment> segments)
         {
             int n = segments.Count();
             IEnumerable<int> RandomPermutation = new RandomPermutation(n);
@@ -81,11 +96,22 @@ namespace ComputationalGeometry.TrapezoidalMap
             Root = new TrapezoidalNode(RecBoundary);
             RecBoundary.Node = Root;
 
-            foreach(int i in RandomPermutation) 
+            foreach (int i in RandomPermutation)
             {
-                Vertex leftVertex = segments[i].LeftVertex;
-                Vertex rightVertex = segments[i].RightVertex;
-                Segment newsegment = segments[i];
+                Vertex leftVertex;
+                Vertex rightVertex;
+                if (segments[i].Vertex1.Position.X < segments[i].Vertex2.Position.X)
+                {
+                    leftVertex = segments[i].Vertex1;
+                    rightVertex = segments[i].Vertex2;
+                }
+                else
+                {
+                    leftVertex = segments[i].Vertex2;
+                    rightVertex = segments[i].Vertex1;
+                }
+
+                Segment newsegment = new Segment(leftVertex, rightVertex);
                 var ListInterTraps = FindIntersectedTraps(newsegment);                               // List of trapezoids that intersect segment
 
 
@@ -270,7 +296,7 @@ namespace ComputationalGeometry.TrapezoidalMap
                     else
                     {
                         Node Children = ((TrapezoidalNode)interTrap.Node).To4Traps(newsegment);
-                        if (interTrap.Node.Parent.Count != 0) 
+                        if (interTrap.Node.Parent.Count != 0)
                             foreach (Node parent in interTrap.Node.Parent)
                             {
                                 if (parent.LeftChildren.IsTrapezoid && ((TrapezoidalNode)parent.LeftChildren).Trapezoid.Equals(interTrap))
@@ -289,6 +315,13 @@ namespace ComputationalGeometry.TrapezoidalMap
 
                 else
                 {
+                    List<int> WaitTraps = new List<int>();
+                    bool HigherTrapsWait = false;
+                    bool LowerTrapsWait = false;
+                    List<Node> ListChildrens = new List<Node>();
+                    bool FirstExcess = false;
+                    bool LastExcess = false;
+
                     // First trapezoid
 
                     Trapezoid FirstTrap = ListInterTraps[0];
@@ -307,6 +340,7 @@ namespace ComputationalGeometry.TrapezoidalMap
                             ((TrapezoidalNode)FirstChildren.RightChildren).Trapezoid.SetVertex(newsegment.LeftVertex, FirstTrap.Rightp);
                             ((TrapezoidalNode)FirstChildren.LeftChildren).Trapezoid.SetVertex(newsegment.LeftVertex, null);
                         }
+                        ListChildrens.Add(FirstChildren);
                     }
                     // Case 2: Bottom contains left of segment
                     else if (FirstTrap.Bottom.LeftVertex.Equals(newsegment.LeftVertex))
@@ -322,6 +356,7 @@ namespace ComputationalGeometry.TrapezoidalMap
                             ((TrapezoidalNode)FirstChildren.RightChildren).Trapezoid.SetVertex(newsegment.LeftVertex, FirstTrap.Rightp);
                             ((TrapezoidalNode)FirstChildren.LeftChildren).Trapezoid.SetVertex(newsegment.LeftVertex, null);
                         }
+                        ListChildrens.Add(FirstChildren);
                     }
                     // Case 3:  Left vertical edge contains left of segment
                     else if (FirstTrap.Leftp.X == newsegment.LeftVertex.X)
@@ -337,11 +372,13 @@ namespace ComputationalGeometry.TrapezoidalMap
                             ((TrapezoidalNode)FirstChildren.RightChildren).Trapezoid.SetVertex(newsegment.LeftVertex, FirstTrap.Rightp);
                             ((TrapezoidalNode)FirstChildren.LeftChildren).Trapezoid.SetVertex(newsegment.LeftVertex, null);
                         }
+                        ListChildrens.Add(FirstChildren);
                     }
                     // Case 4:  Left vertical edge doesn't contain left of segment
                     else
                     {
                         FirstChildren = ((TrapezoidalNode)FirstTrap.Node).To3TrapsLeft_2Right(newsegment);
+                        FirstExcess = true;
                         if (FirstTrap.Top.RightVertex.Equals(FirstTrap.Rightp))
                         {
                             ((TrapezoidalNode)FirstChildren.RightChildren.LeftChildren).Trapezoid.SetVertex(newsegment.LeftVertex, FirstTrap.Rightp);
@@ -352,6 +389,38 @@ namespace ComputationalGeometry.TrapezoidalMap
                             ((TrapezoidalNode)FirstChildren.RightChildren.RightChildren).Trapezoid.SetVertex(newsegment.LeftVertex, FirstTrap.Rightp);
                             ((TrapezoidalNode)FirstChildren.RightChildren.LeftChildren).Trapezoid.SetVertex(newsegment.LeftVertex, null);
                         }
+                        ListChildrens.Add(FirstChildren.RightChildren);
+                    }
+
+                    // Middle trapezoids
+
+                    for (int j = 1; j < ListInterTraps.Count - 1; j++)
+                    {
+                        Trapezoid MidTrap = ListInterTraps[j];
+                        Node MidChildren = ((TrapezoidalNode)MidTrap.Node).To2Traps(newsegment);
+
+                        if (MidTrap.Top.LeftVertex.Equals(MidTrap.Leftp))
+                        {
+                            ((TrapezoidalNode)MidChildren.LeftChildren).Trapezoid.SetLeftVertex(MidTrap.Leftp);
+                            ((TrapezoidalNode)MidChildren.RightChildren).Trapezoid.SetLeftVertex(null);
+                        }
+                        else
+                        {
+                            ((TrapezoidalNode)MidChildren.RightChildren).Trapezoid.SetLeftVertex(MidTrap.Leftp);
+                            ((TrapezoidalNode)MidChildren.LeftChildren).Trapezoid.SetLeftVertex(null);
+                        }
+
+                        if (MidTrap.Top.RightVertex.Equals(MidTrap.Rightp))
+                        {
+                            ((TrapezoidalNode)MidChildren.LeftChildren).Trapezoid.SetRightVertex(MidTrap.Rightp);
+                            ((TrapezoidalNode)MidChildren.RightChildren).Trapezoid.SetRightVertex(null);
+                        }
+                        else
+                        {
+                            ((TrapezoidalNode)MidChildren.RightChildren).Trapezoid.SetRightVertex(MidTrap.Rightp);
+                            ((TrapezoidalNode)MidChildren.LeftChildren).Trapezoid.SetRightVertex(null);
+                        }
+                        ListChildrens.Add(MidChildren);
                     }
 
                     // Last trapezoid
@@ -372,6 +441,7 @@ namespace ComputationalGeometry.TrapezoidalMap
                             ((TrapezoidalNode)LastChildren.RightChildren).Trapezoid.SetVertex(LastTrap.Leftp, newsegment.RightVertex);
                             ((TrapezoidalNode)LastChildren.LeftChildren).Trapezoid.SetVertex(null, newsegment.RightVertex);
                         }
+                        ListChildrens.Add(LastChildren);
                     }
                     // Case 2: Bottom contains right of segment
                     else if (LastTrap.Bottom.RightVertex.Equals(newsegment.RightVertex))
@@ -387,6 +457,7 @@ namespace ComputationalGeometry.TrapezoidalMap
                             ((TrapezoidalNode)LastChildren.RightChildren).Trapezoid.SetVertex(LastTrap.Leftp, newsegment.RightVertex);
                             ((TrapezoidalNode)LastChildren.LeftChildren).Trapezoid.SetVertex(null, newsegment.RightVertex);
                         }
+                        ListChildrens.Add(LastChildren);
                     }
                     // Case 3:  Left vertical edge contains right of segment
                     else if (LastTrap.Rightp.X == newsegment.RightVertex.X)
@@ -402,11 +473,13 @@ namespace ComputationalGeometry.TrapezoidalMap
                             ((TrapezoidalNode)LastChildren.RightChildren).Trapezoid.SetVertex(LastTrap.Leftp, newsegment.RightVertex);
                             ((TrapezoidalNode)LastChildren.LeftChildren).Trapezoid.SetVertex(null, newsegment.RightVertex);
                         }
+                        ListChildrens.Add(LastChildren);
                     }
                     // Case 4:  Left vertical edge doesn't contain left of segment
                     else
                     {
                         LastChildren = ((TrapezoidalNode)LastTrap.Node).To3TrapsRight_2Left(newsegment);
+                        LastExcess = true;
                         if (LastTrap.Top.LeftVertex.Equals(LastTrap.Leftp))
                         {
                             ((TrapezoidalNode)LastChildren.LeftChildren.LeftChildren).Trapezoid.SetVertex(LastTrap.Leftp, newsegment.RightVertex);
@@ -417,271 +490,60 @@ namespace ComputationalGeometry.TrapezoidalMap
                             ((TrapezoidalNode)LastChildren.LeftChildren.RightChildren).Trapezoid.SetVertex(LastTrap.Leftp, newsegment.RightVertex);
                             ((TrapezoidalNode)LastChildren.LeftChildren.LeftChildren).Trapezoid.SetVertex(null, newsegment.RightVertex);
                         }
+                        ListChildrens.Add(LastChildren.LeftChildren);
                     }
 
+                    ((TrapezoidalNode)ListChildrens[0].LeftChildren).Trapezoid.SetRightNeighbor(((TrapezoidalNode)ListChildrens[1].LeftChildren).Trapezoid, ((TrapezoidalNode)ListChildrens[1].LeftChildren).Trapezoid);
+                    ((TrapezoidalNode)ListChildrens[0].RightChildren).Trapezoid.SetRightNeighbor(((TrapezoidalNode)ListChildrens[1].RightChildren).Trapezoid, ((TrapezoidalNode)ListChildrens[1].RightChildren).Trapezoid);
 
-                    if (ListInterTraps.Count > 2)
+                    ((TrapezoidalNode)ListChildrens.Last().LeftChildren).Trapezoid.SetLeftNeighbor(((TrapezoidalNode)ListChildrens[ListChildrens.Count - 2].LeftChildren).Trapezoid, ((TrapezoidalNode)ListChildrens[ListChildrens.Count - 2].LeftChildren).Trapezoid);
+                    ((TrapezoidalNode)ListChildrens.Last().RightChildren).Trapezoid.SetLeftNeighbor(((TrapezoidalNode)ListChildrens[ListChildrens.Count - 2].RightChildren).Trapezoid, ((TrapezoidalNode)ListChildrens[ListChildrens.Count - 2].RightChildren).Trapezoid);
+
+                    for (int j = 1; j < ListChildrens.Count - 1; j++)
                     {
-
-                        List<Node> ListMdiChildren = new List<Node>();
-                        for (int j = 1; j < ListInterTraps.Count - 1; j++)
-                        {
-                            Trapezoid MidTrap = ListInterTraps[j];
-                            Node MidChildren = ((TrapezoidalNode)MidTrap.Node).To2Traps(newsegment);
-
-                            if (MidTrap.Top.LeftVertex.Equals(MidTrap.Leftp))
-                            {
-                                ((TrapezoidalNode)MidChildren.LeftChildren).Trapezoid.SetLeftVertex(MidTrap.Leftp);
-                                ((TrapezoidalNode)MidChildren.RightChildren).Trapezoid.SetLeftVertex(null);
-                            }
-                            else
-                            {
-                                ((TrapezoidalNode)MidChildren.RightChildren).Trapezoid.SetLeftVertex(MidTrap.Leftp);
-                                ((TrapezoidalNode)MidChildren.LeftChildren).Trapezoid.SetLeftVertex(null);
-                            }
-
-                            if (MidTrap.Top.RightVertex.Equals(MidTrap.Rightp))
-                            {
-                                ((TrapezoidalNode)MidChildren.LeftChildren).Trapezoid.SetRightVertex(MidTrap.Rightp);
-                                ((TrapezoidalNode)MidChildren.RightChildren).Trapezoid.SetRightVertex(null);
-                            }
-                            else
-                            {
-                                ((TrapezoidalNode)MidChildren.RightChildren).Trapezoid.SetRightVertex(MidTrap.Rightp);
-                                ((TrapezoidalNode)MidChildren.LeftChildren).Trapezoid.SetRightVertex(null);
-                            }
-
-                            ListMdiChildren.Add(MidChildren);
-                        }
-
-                        // Merge trapezoids
-
-
-                        // 2 first Trapezoids
-                        if(FirstChildren.RightChildren.IsTrapezoid)
-                        {
-                            if(((TrapezoidalNode)FirstChildren.LeftChildren).Trapezoid.Rightp == null)
-                            {
-                                Trapezoid FirstHigherTrap = ((TrapezoidalNode)FirstChildren.LeftChildren).Trapezoid;
-                                Trapezoid SecondHigherTrap = ((TrapezoidalNode)ListMdiChildren.First().LeftChildren).Trapezoid;
-                                Trapezoid MergeTrap = new Trapezoid(FirstHigherTrap.Leftp, SecondHigherTrap.Rightp, FirstHigherTrap.Top, FirstHigherTrap.Bottom);
-                                Node MergeNode = new TrapezoidalNode(MergeTrap);
-                                FirstChildren.LeftChildren = MergeNode;
-                                ListMdiChildren.First().LeftChildren = MergeNode;
-                            }
-                            else
-                            {
-                                Trapezoid FirstLowerTrap = ((TrapezoidalNode)FirstChildren.RightChildren).Trapezoid;
-                                Trapezoid SecondLowerTrap = ((TrapezoidalNode)ListMdiChildren.First().RightChildren).Trapezoid;
-                                Trapezoid MergeTrap = new Trapezoid(FirstLowerTrap.Leftp, SecondLowerTrap.Rightp, FirstLowerTrap.Top, FirstLowerTrap.Bottom);
-                                Node MergeNode = new TrapezoidalNode(MergeTrap);
-                                FirstChildren.RightChildren = MergeNode;
-                                ListMdiChildren.First().RightChildren = MergeNode;
-                            }
-                        }
-                        else
-                        {
-                            if (((TrapezoidalNode)FirstChildren.RightChildren.LeftChildren).Trapezoid.Rightp == null)
-                            {
-                                Trapezoid FirstHigherTrap = ((TrapezoidalNode)FirstChildren.RightChildren.LeftChildren).Trapezoid;
-                                Trapezoid SecondHigherTrap = ((TrapezoidalNode)ListMdiChildren.First().LeftChildren).Trapezoid;
-                                Trapezoid MergeTrap = new Trapezoid(FirstHigherTrap.Leftp, SecondHigherTrap.Rightp, FirstHigherTrap.Top, FirstHigherTrap.Bottom);
-                                Node MergeNode = new TrapezoidalNode(MergeTrap);
-                                FirstChildren.RightChildren.LeftChildren = ListMdiChildren.First().LeftChildren = MergeNode;
-                            }
-                            else
-                            {
-                                Trapezoid FirstLowerTrap = ((TrapezoidalNode)FirstChildren.RightChildren.RightChildren).Trapezoid;
-                                Trapezoid SecondLowerTrap = ((TrapezoidalNode)ListMdiChildren.First().RightChildren).Trapezoid;
-                                Trapezoid MergeTrap = new Trapezoid(FirstLowerTrap.Leftp, SecondLowerTrap.Rightp, FirstLowerTrap.Top, FirstLowerTrap.Bottom);
-                                Node MergeNode = new TrapezoidalNode(MergeTrap);
-                                FirstChildren.RightChildren.RightChildren = MergeNode;
-                                ListMdiChildren.First().RightChildren = MergeNode;
-                            }
-                        }
-
-                        if (ListMdiChildren.Count > 1)
-                            // Còn trường hợp chưa xử lí
-                            for (int j = 0; j < ListMdiChildren.Count - 1; j++)
-                            {
-                                if (((TrapezoidalNode)ListMdiChildren[j].LeftChildren).Trapezoid.Rightp == null)
-                                {
-                                    Trapezoid FirstHigherTrap = ((TrapezoidalNode)ListMdiChildren[j].LeftChildren).Trapezoid;
-                                    Trapezoid SecondHigherTrap = ((TrapezoidalNode)ListMdiChildren[j + 1].LeftChildren).Trapezoid;
-                                    Trapezoid MergeTrap = new Trapezoid(FirstHigherTrap.Leftp, SecondHigherTrap.Rightp, FirstHigherTrap.Top, FirstHigherTrap.Bottom);
-                                    Node MergeNode = new TrapezoidalNode(MergeTrap);
-                                    ListMdiChildren[j].LeftChildren = MergeNode;
-                                    ListMdiChildren[j + 1].LeftChildren = MergeNode;
-                                }
-                                else
-                                {
-                                    Trapezoid FirstLowerTrap = ((TrapezoidalNode)ListMdiChildren[j].RightChildren).Trapezoid;
-                                    Trapezoid SecondLowerTrap = ((TrapezoidalNode)ListMdiChildren[j + 1].RightChildren).Trapezoid;
-                                    Trapezoid MergeTrap = new Trapezoid(FirstLowerTrap.Leftp, SecondLowerTrap.Rightp, FirstLowerTrap.Top, FirstLowerTrap.Bottom);
-                                    Node MergeNode = new TrapezoidalNode(MergeTrap);
-                                    ListMdiChildren[j].RightChildren = MergeNode;
-                                    ListMdiChildren[j + 1].RightChildren = MergeNode;
-                                }
-                            }
-
-                        // 2 last Trapezoids
-                        if (LastChildren.LeftChildren.IsTrapezoid)
-                        {
-                            if (((TrapezoidalNode)LastChildren.LeftChildren).Trapezoid.Leftp == null)
-                            {
-                                Trapezoid SecondHigherTrap = ((TrapezoidalNode)LastChildren.LeftChildren).Trapezoid;
-                                Trapezoid FirstHigherTrap = ((TrapezoidalNode)ListMdiChildren.Last().LeftChildren).Trapezoid;
-                                Trapezoid MergeTrap = new Trapezoid(FirstHigherTrap.Leftp, SecondHigherTrap.Rightp, FirstHigherTrap.Top, FirstHigherTrap.Bottom);
-                                Node MergeNode = new TrapezoidalNode(MergeTrap);
-                                LastChildren.LeftChildren = MergeNode;
-                                ListMdiChildren.Last().LeftChildren = MergeNode;
-                            }
-                            else
-                            {
-                                Trapezoid SecondHigherTrap = ((TrapezoidalNode)LastChildren.RightChildren).Trapezoid;
-                                Trapezoid FirstHigherTrap = ((TrapezoidalNode)ListMdiChildren.Last().RightChildren).Trapezoid;
-                                Trapezoid MergeTrap = new Trapezoid(FirstHigherTrap.Leftp, SecondHigherTrap.Rightp, FirstHigherTrap.Top, FirstHigherTrap.Bottom);
-                                Node MergeNode = new TrapezoidalNode(MergeTrap);
-                                LastChildren.RightChildren = MergeNode;
-                                ListMdiChildren.Last().RightChildren = MergeNode;
-                            }
-                        }
-                        else
-                        {
-                            if (((TrapezoidalNode)LastChildren.LeftChildren.LeftChildren).Trapezoid.Leftp == null)
-                            {
-                                Trapezoid SecondHigherTrap = ((TrapezoidalNode)LastChildren.LeftChildren.LeftChildren).Trapezoid;
-                                Trapezoid FirstHigherTrap = ((TrapezoidalNode)ListMdiChildren.Last().LeftChildren).Trapezoid;
-                                Trapezoid MergeTrap = new Trapezoid(FirstHigherTrap.Leftp, SecondHigherTrap.Rightp, FirstHigherTrap.Top, FirstHigherTrap.Bottom);
-                                Node MergeNode = new TrapezoidalNode(MergeTrap);
-                                LastChildren.LeftChildren.LeftChildren = MergeNode;
-                                ListMdiChildren.Last().LeftChildren = MergeNode;
-                            }
-                            else
-                            {
-                                Trapezoid SecondHigherTrap = ((TrapezoidalNode)LastChildren.LeftChildren.RightChildren).Trapezoid;
-                                Trapezoid FirstHigherTrap = ((TrapezoidalNode)ListMdiChildren.Last().RightChildren).Trapezoid;
-                                Trapezoid MergeTrap = new Trapezoid(FirstHigherTrap.Leftp, SecondHigherTrap.Rightp, FirstHigherTrap.Top, FirstHigherTrap.Bottom);
-                                Node MergeNode = new TrapezoidalNode(MergeTrap);
-                                LastChildren.LeftChildren.RightChildren = MergeNode;
-                                ListMdiChildren.Last().RightChildren = MergeNode;
-                            }
-                        }
+                        ((TrapezoidalNode)ListChildrens[j].LeftChildren).Trapezoid.SetRightNeighbor(((TrapezoidalNode)ListChildrens[j + 1].LeftChildren).Trapezoid, ((TrapezoidalNode)ListChildrens[j + 1].LeftChildren).Trapezoid);
+                        ((TrapezoidalNode)ListChildrens[j].RightChildren).Trapezoid.SetRightNeighbor(((TrapezoidalNode)ListChildrens[j + 1].RightChildren).Trapezoid, ((TrapezoidalNode)ListChildrens[j + 1].RightChildren).Trapezoid);
+                        ((TrapezoidalNode)ListChildrens[j].LeftChildren).Trapezoid.SetLeftNeighbor(((TrapezoidalNode)ListChildrens[j - 1].LeftChildren).Trapezoid, ((TrapezoidalNode)ListChildrens[j + 1].LeftChildren).Trapezoid);
+                        ((TrapezoidalNode)ListChildrens[j].RightChildren).Trapezoid.SetLeftNeighbor(((TrapezoidalNode)ListChildrens[j - 1].RightChildren).Trapezoid, ((TrapezoidalNode)ListChildrens[j + 1].RightChildren).Trapezoid);
                     }
 
-                    else
+                    bool continueCheck = true;
+                    while (continueCheck)
                     {
-                        if(FirstChildren.RightChildren.IsTrapezoid && LastChildren.LeftChildren.IsTrapezoid)
+                        continueCheck = false;
+                        for (int j = 0; j < ListChildrens.Count - 1; j++)
                         {
-                            if (((TrapezoidalNode)FirstChildren.LeftChildren).Trapezoid.Rightp == null)
+                            if (((TrapezoidalNode)ListChildrens[i].LeftChildren).Trapezoid.Rightp == null)
                             {
-                                Trapezoid FirstHigherTrap = ((TrapezoidalNode)FirstChildren.LeftChildren).Trapezoid;
-                                Trapezoid SecondHigherTrap = ((TrapezoidalNode)LastChildren.LeftChildren).Trapezoid;
-                                Trapezoid MergeTrap = new Trapezoid(FirstHigherTrap.Leftp, SecondHigherTrap.Rightp, FirstHigherTrap.Top, FirstHigherTrap.Bottom);
-                                Node MergeNode = new TrapezoidalNode(MergeTrap);
-                                FirstChildren.LeftChildren = MergeNode;
-                                LastChildren.LeftChildren = MergeNode;
-                                ((TrapezoidalNode)FirstChildren.RightChildren).Trapezoid.SetRightNeighbor(((TrapezoidalNode)LastChildren.RightChildren).Trapezoid, ((TrapezoidalNode)LastChildren.RightChildren).Trapezoid);
-                                ((TrapezoidalNode)LastChildren.RightChildren).Trapezoid.SetLeftNeighbor(((TrapezoidalNode)FirstChildren.RightChildren).Trapezoid, ((TrapezoidalNode)FirstChildren.RightChildren).Trapezoid);
+                                continueCheck = true;
+                                Trapezoid oldLeftTrap = ((TrapezoidalNode)ListChildrens[i].LeftChildren).Trapezoid;
+                                Trapezoid oldRightTrap = ((TrapezoidalNode)ListChildrens[i + 1].LeftChildren).Trapezoid;
+                                Trapezoid newTrap = new Trapezoid(oldLeftTrap.Leftp, oldRightTrap.Rightp, oldLeftTrap.Top, oldLeftTrap.Bottom);
+                                newTrap.SetNeighbor(oldLeftTrap.HigherLeftNeighbor, oldLeftTrap.LowerLeftNeighbor, oldRightTrap.HigherRightNeighbor, oldRightTrap.LowerRightNeighbor);
+                                TrapezoidalNode newNode = new TrapezoidalNode(newTrap);
+                                ListChildrens[i].LeftChildren = newNode;
+                                ListChildrens[i + 1].LeftChildren = newNode;
                             }
-                            else
-                            {
-                                Trapezoid FirstLowerTrap = ((TrapezoidalNode)FirstChildren.RightChildren).Trapezoid;
-                                Trapezoid SecondLowerTrap = ((TrapezoidalNode)LastChildren.RightChildren).Trapezoid;
-                                Trapezoid MergeTrap = new Trapezoid(FirstLowerTrap.Leftp, SecondLowerTrap.Rightp, FirstLowerTrap.Top, FirstLowerTrap.Bottom);
-                                Node MergeNode = new TrapezoidalNode(MergeTrap);
-                                FirstChildren.RightChildren = MergeNode;
-                                LastChildren.RightChildren = MergeNode;
-                                ((TrapezoidalNode)FirstChildren.LeftChildren).Trapezoid.SetRightNeighbor(((TrapezoidalNode)LastChildren.LeftChildren).Trapezoid, ((TrapezoidalNode)LastChildren.LeftChildren).Trapezoid);
-                                ((TrapezoidalNode)LastChildren.LeftChildren).Trapezoid.SetLeftNeighbor(((TrapezoidalNode)FirstChildren.LeftChildren).Trapezoid, ((TrapezoidalNode)FirstChildren.LeftChildren).Trapezoid);
-                            }
-                        }
 
-                        else if(FirstChildren.RightChildren.IsTrapezoid)
-                        {
-                            if (((TrapezoidalNode)FirstChildren.LeftChildren).Trapezoid.Rightp == null)
+                            if (((TrapezoidalNode)ListChildrens[i].RightChildren).Trapezoid.Rightp == null)
                             {
-                                Trapezoid FirstHigherTrap = ((TrapezoidalNode)FirstChildren.LeftChildren).Trapezoid;
-                                Trapezoid SecondHigherTrap = ((TrapezoidalNode)LastChildren.LeftChildren.LeftChildren).Trapezoid;
-                                Trapezoid MergeTrap = new Trapezoid(FirstHigherTrap.Leftp, SecondHigherTrap.Rightp, FirstHigherTrap.Top, FirstHigherTrap.Bottom);
-                                Node MergeNode = new TrapezoidalNode(MergeTrap);
-                                FirstChildren.LeftChildren = MergeNode;
-                                LastChildren.LeftChildren.LeftChildren = MergeNode;
-                                ((TrapezoidalNode)FirstChildren.RightChildren).Trapezoid.SetRightNeighbor(((TrapezoidalNode)LastChildren.LeftChildren.RightChildren).Trapezoid, ((TrapezoidalNode)LastChildren.LeftChildren.RightChildren).Trapezoid);
-                                ((TrapezoidalNode)LastChildren.LeftChildren.RightChildren).Trapezoid.SetLeftNeighbor(((TrapezoidalNode)FirstChildren.RightChildren).Trapezoid, ((TrapezoidalNode)FirstChildren.RightChildren).Trapezoid);
+                                continueCheck = true;
+                                Trapezoid oldLeftTrap = ((TrapezoidalNode)ListChildrens[i].RightChildren).Trapezoid;
+                                Trapezoid oldRightTrap = ((TrapezoidalNode)ListChildrens[i + 1].RightChildren).Trapezoid;
+                                Trapezoid newTrap = new Trapezoid(oldLeftTrap.Leftp, oldRightTrap.Rightp, oldLeftTrap.Top, oldLeftTrap.Bottom);
+                                newTrap.SetNeighbor(oldLeftTrap.HigherLeftNeighbor, oldLeftTrap.LowerLeftNeighbor, oldRightTrap.HigherRightNeighbor, oldRightTrap.LowerRightNeighbor);
+                                TrapezoidalNode newNode = new TrapezoidalNode(newTrap);
+                                ListChildrens[i].RightChildren = newNode;
+                                ListChildrens[i + 1].RightChildren = newNode;
                             }
-                            else
-                            {
-                                Trapezoid FirstLowerTrap = ((TrapezoidalNode)FirstChildren.RightChildren).Trapezoid;
-                                Trapezoid SecondLowerTrap = ((TrapezoidalNode)LastChildren.LeftChildren.RightChildren).Trapezoid;
-                                Trapezoid MergeTrap = new Trapezoid(FirstLowerTrap.Leftp, SecondLowerTrap.Rightp, FirstLowerTrap.Top, FirstLowerTrap.Bottom);
-                                Node MergeNode = new TrapezoidalNode(MergeTrap);
-                                FirstChildren.RightChildren = MergeNode;
-                                LastChildren.LeftChildren.RightChildren = MergeNode;
-                                ((TrapezoidalNode)FirstChildren.LeftChildren).Trapezoid.SetRightNeighbor(((TrapezoidalNode)LastChildren.LeftChildren.LeftChildren).Trapezoid, ((TrapezoidalNode)LastChildren.LeftChildren.LeftChildren).Trapezoid);
-                                ((TrapezoidalNode)LastChildren.LeftChildren.LeftChildren).Trapezoid.SetLeftNeighbor(((TrapezoidalNode)FirstChildren.LeftChildren).Trapezoid, ((TrapezoidalNode)FirstChildren.LeftChildren).Trapezoid);
-                            }
-                        }
-                        else if(LastChildren.LeftChildren.IsTrapezoid)
-                        {
-                            if (((TrapezoidalNode)FirstChildren.RightChildren.LeftChildren).Trapezoid.Rightp == null)
-                            {
-                                Trapezoid FirstHigherTrap = ((TrapezoidalNode)FirstChildren.RightChildren.LeftChildren).Trapezoid;
-                                Trapezoid SecondHigherTrap = ((TrapezoidalNode)LastChildren.LeftChildren).Trapezoid;
-                                Trapezoid MergeTrap = new Trapezoid(FirstHigherTrap.Leftp, SecondHigherTrap.Rightp, FirstHigherTrap.Top, FirstHigherTrap.Bottom);
-                                Node MergeNode = new TrapezoidalNode(MergeTrap);
-                                FirstChildren.RightChildren.LeftChildren = MergeNode;
-                                LastChildren.LeftChildren = MergeNode;
-                                ((TrapezoidalNode)FirstChildren.RightChildren.RightChildren).Trapezoid.SetRightNeighbor(((TrapezoidalNode)LastChildren.RightChildren).Trapezoid, ((TrapezoidalNode)LastChildren.RightChildren).Trapezoid);
-                                ((TrapezoidalNode)LastChildren.RightChildren).Trapezoid.SetLeftNeighbor(((TrapezoidalNode)FirstChildren.RightChildren.RightChildren).Trapezoid, ((TrapezoidalNode)FirstChildren.RightChildren.RightChildren).Trapezoid);
-                            }
-                            else
-                            {
-                                Trapezoid FirstLowerTrap = ((TrapezoidalNode)FirstChildren.RightChildren.RightChildren).Trapezoid;
-                                Trapezoid SecondLowerTrap = ((TrapezoidalNode)LastChildren.RightChildren).Trapezoid;
-                                Trapezoid MergeTrap = new Trapezoid(FirstLowerTrap.Leftp, SecondLowerTrap.Rightp, FirstLowerTrap.Top, FirstLowerTrap.Bottom);
-                                Node MergeNode = new TrapezoidalNode(MergeTrap);
-                                FirstChildren.RightChildren.RightChildren = MergeNode;
-                                LastChildren.RightChildren = MergeNode;
-                                ((TrapezoidalNode)FirstChildren.RightChildren.LeftChildren).Trapezoid.SetRightNeighbor(((TrapezoidalNode)LastChildren.LeftChildren).Trapezoid, ((TrapezoidalNode)LastChildren.LeftChildren).Trapezoid);
-                                ((TrapezoidalNode)LastChildren.LeftChildren).Trapezoid.SetLeftNeighbor(((TrapezoidalNode)FirstChildren.RightChildren.LeftChildren).Trapezoid, ((TrapezoidalNode)FirstChildren.RightChildren.LeftChildren).Trapezoid);
-                            }
-                        }
-                        else
-                        {
-                            if (((TrapezoidalNode)FirstChildren.RightChildren.LeftChildren).Trapezoid.Rightp == null)
-                            {
-                                Trapezoid FirstHigherTrap = ((TrapezoidalNode)FirstChildren.RightChildren.LeftChildren).Trapezoid;
-                                Trapezoid SecondHigherTrap = ((TrapezoidalNode)LastChildren.LeftChildren.LeftChildren).Trapezoid;
-                                Trapezoid MergeTrap = new Trapezoid(FirstHigherTrap.Leftp, SecondHigherTrap.Rightp, FirstHigherTrap.Top, FirstHigherTrap.Bottom);
-                                Node MergeNode = new TrapezoidalNode(MergeTrap);
-                                FirstChildren.RightChildren.LeftChildren = MergeNode;
-                                LastChildren.LeftChildren.LeftChildren = MergeNode;
-                                ((TrapezoidalNode)FirstChildren.RightChildren.RightChildren).Trapezoid.SetRightNeighbor(((TrapezoidalNode)LastChildren.LeftChildren.RightChildren).Trapezoid, ((TrapezoidalNode)LastChildren.LeftChildren.RightChildren).Trapezoid);
-                                ((TrapezoidalNode)LastChildren.LeftChildren.RightChildren).Trapezoid.SetLeftNeighbor(((TrapezoidalNode)FirstChildren.RightChildren.RightChildren).Trapezoid, ((TrapezoidalNode)FirstChildren.RightChildren.RightChildren).Trapezoid);
-                            }
-                            else
-                            {
-                                Trapezoid FirstLowerTrap = ((TrapezoidalNode)FirstChildren.RightChildren.RightChildren).Trapezoid;
-                                Trapezoid SecondLowerTrap = ((TrapezoidalNode)LastChildren.LeftChildren.RightChildren).Trapezoid;
-                                Trapezoid MergeTrap = new Trapezoid(FirstLowerTrap.Leftp, SecondLowerTrap.Rightp, FirstLowerTrap.Top, FirstLowerTrap.Bottom);
-                                Node MergeNode = new TrapezoidalNode(MergeTrap);
-                                FirstChildren.RightChildren.RightChildren = MergeNode;
-                                LastChildren.LeftChildren.RightChildren = MergeNode;
-                                ((TrapezoidalNode)FirstChildren.RightChildren.LeftChildren).Trapezoid.SetRightNeighbor(((TrapezoidalNode)LastChildren.LeftChildren.LeftChildren).Trapezoid, ((TrapezoidalNode)LastChildren.LeftChildren.LeftChildren).Trapezoid);
-                                ((TrapezoidalNode)LastChildren.LeftChildren.LeftChildren).Trapezoid.SetLeftNeighbor(((TrapezoidalNode)FirstChildren.RightChildren.LeftChildren).Trapezoid, ((TrapezoidalNode)FirstChildren.RightChildren.LeftChildren).Trapezoid);
-                            }
+
                         }
                     }
                 }
-
             }
-
-            foreach (Vertex vertex in Vertices)
-                vertex.SetEdges();
         }
 
-        public TrapezoidalMap1()
+        public TrapezoidalMap()
         {
         }
 
@@ -706,11 +568,11 @@ namespace ComputationalGeometry.TrapezoidalMap
         List<Trapezoid> FindIntersectedTraps(Segment segment)
         {
             List<Trapezoid> ListInterTraps = new List<Trapezoid>();
-            ListInterTraps.Add(Location(segment.LeftVertex));
+            ListInterTraps.Add((Trapezoid)Location(segment.LeftVertex.Position));
 
-            while (!ListInterTraps.Last().Contain(segment.RightVertex))
+            while (!ListInterTraps.Last().Contain(segment.RightVertex.Position))
             {
-                if (segment.BelowOf(ListInterTraps.Last().Rightp))
+                if (segment.BelowOf(ListInterTraps.Last().Rightp.Position))
                     ListInterTraps.Add(ListInterTraps.Last().LowerRightNeighbor);
                 else
                     ListInterTraps.Add(ListInterTraps.Last().HigherRightNeighbor);
@@ -724,39 +586,41 @@ namespace ComputationalGeometry.TrapezoidalMap
         /// </summary>
         /// <param name="edges"></param>
         /// <returns></returns>
-        Trapezoid RectangleBoundary(IEnumerable<Segment> segments)
+        Trapezoid RectangleBoundary(IEnumerable<Common.Segment> segments)
         {
-            double leftX = 0;
-            double rightX = 0;
-            double topY = 0;
-            double bottomY = 0;
+            double left = 0;
+            double right = 0;
+            double top = 0;
+            double bottom = 0;
 
-            foreach(Segment segment in segments)
+            foreach(Common.Segment segment in segments)
             {
-                leftX = leftX < segment.LeftVertex.X ? leftX : segment.LeftVertex.X;
+                left = left < segment.Vertex1.Position.X ? left : segment.Vertex1.Position.X;
+                left = left < segment.Vertex2.Position.X ? left : segment.Vertex2.Position.X;
 
-                rightX = rightX > segment.RightVertex.X ? rightX : segment.RightVertex.X;
+                right = right > segment.Vertex1.Position.X ? right : segment.Vertex1.Position.X;
+                right = right > segment.Vertex2.Position.X ? right : segment.Vertex2.Position.X;
 
-                topY = topY > segment.LeftVertex.Y ? topY : segment.LeftVertex.Y;
-                topY = topY > segment.RightVertex.Y ? topY : segment.RightVertex.Y;
+                top = top > segment.Vertex1.Position.Y ? top : segment.Vertex1.Position.Y;
+                top = top > segment.Vertex2.Position.Y ? top : segment.Vertex2.Position.Y;
 
-                bottomY = bottomY < segment.LeftVertex.Y? bottomY : segment.LeftVertex.Y;
-                bottomY = bottomY < segment.RightVertex.Y ? bottomY : segment.RightVertex.Y;
+                bottom = bottom < segment.Vertex1.Position.Y ? bottom : segment.Vertex1.Position.Y;
+                bottom = bottom < segment.Vertex2.Position.Y ? bottom : segment.Vertex2.Position.Y;
             }
 
-            --leftX;
-            ++rightX;
-            ++topY;
-            --bottomY;
+            --left;
+            ++right;
+            ++top;
+            --bottom;
 
-            this.boundingBox = new Rectangle(leftX, rightX, bottomY, topY);
+            this.boundingBox = new Rectangle(left, right, bottom, top);
 
             Trapezoid R = new Trapezoid();
-            R.Leftp = new Vertex(leftX, topY);
-            R.Rightp = new Vertex(rightX, bottomY);
+            R.Leftp = new Vertex(left, top);
+            R.Rightp = new Vertex(right, bottom);
 
-            R.Top = new Segment(R.Leftp, new Vertex(rightX, topY));
-            R.Bottom = new Segment(new Vertex(leftX, bottomY), R.Rightp);
+            R.Top = new Segment(R.Leftp, new Vertex(right, top));
+            R.Bottom = new Segment(new Vertex(left, bottom), R.Rightp);
             
             return R;
         }
@@ -766,7 +630,7 @@ namespace ComputationalGeometry.TrapezoidalMap
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        public Trapezoid Location(Vertex p)
+        private Trapezoid Location(Vector2 p)
         {
             Node curNode = Root;
             while (!curNode.IsTrapezoid)
@@ -791,8 +655,7 @@ namespace ComputationalGeometry.TrapezoidalMap
 
         public ITrapezoid PointLocation(Vector2 point)
         {
-            Vertex p = new Vertex(point.X, point.Y);
-            return Location(p);
+            return Location(point);
         }
     }
 }

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using ComputationalGeometry.Common;
+using System;
 using System.Collections.Generic;
 
 namespace ComputationalGeometry.TrapezoidalMap
 {
-    public class Trapezoid : ITrapezoid
+    class Trapezoid : ITrapezoid
     {
         public Vertex Leftp { get; set; }
         public Vertex Rightp { get; set; }
@@ -154,7 +155,7 @@ namespace ComputationalGeometry.TrapezoidalMap
             }
         }
 
-        public bool Contain(Vertex p)
+        public bool Contain(Vector2 p)
         {
             if (p.X < Leftp.X || p.X > Rightp.X)
                 return false;

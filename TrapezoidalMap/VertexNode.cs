@@ -1,6 +1,6 @@
 ﻿namespace ComputationalGeometry.TrapezoidalMap
 {
-    public class VertexNode : Node
+    class VertexNode : Node
     {
         public Vertex Vertex { get; }
 

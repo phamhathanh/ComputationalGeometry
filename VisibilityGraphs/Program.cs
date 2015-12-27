@@ -16,7 +16,7 @@ namespace VisibilityGraphs
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ShortestPath());
+            //Application.Run(new ShortestPath());
         }
     }
 }

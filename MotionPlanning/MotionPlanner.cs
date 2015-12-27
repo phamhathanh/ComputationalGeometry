@@ -122,7 +122,7 @@ namespace ComputationalGeometry.MotionPlanning
             var segments = from edge in edges
                            select new TrapezoidalMap.Segment(vertexByVector[edge.Origin.Position], vertexByVector[edge.End.Position]);
 
-            TrapezoidalMap1 trapezoidalMap = new TrapezoidalMap1(segments.ToList());
+            TrapezoidalMap.TrapezoidalMap trapezoidalMap = new TrapezoidalMap.TrapezoidalMap(segments.ToList());
             // must handle empty case
             return trapezoidalMap;
         }

@@ -27,5 +27,9 @@ namespace ComputationalGeometry.TrapezoidalMap
         {
             get; set;
         }
+        
+        public VerticalEdge()
+        {
+        }
     }
 }

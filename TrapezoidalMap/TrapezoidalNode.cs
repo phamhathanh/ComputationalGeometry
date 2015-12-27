@@ -1,6 +1,6 @@
 ﻿namespace ComputationalGeometry.TrapezoidalMap
 {
-    public class TrapezoidalNode : Node
+    class TrapezoidalNode : Node
     {
         public Trapezoid Trapezoid { get; }
 
@@ -228,8 +228,8 @@
             Node root = new SegmentNode(segment);
 
             // Trapezoid nodes           
-            Trapezoid higherTrap = new Trapezoid(segment.LeftVertex, segment.RightVertex, Trapezoid.Top, segment);
-            Trapezoid lowerTrap = new Trapezoid(segment.LeftVertex, segment.RightVertex, segment, Trapezoid.Bottom);
+            Trapezoid higherTrap = new Trapezoid(null, null, Trapezoid.Top, segment);
+            Trapezoid lowerTrap = new Trapezoid(null, null, segment, Trapezoid.Bottom);
 
             Node higherTrapNode = new TrapezoidalNode(higherTrap);
             Node lowerTrapNode = new TrapezoidalNode(lowerTrap);
