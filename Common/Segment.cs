@@ -8,9 +8,9 @@ namespace ComputationalGeometry.Common
 {
     public class Segment
     {
-        private readonly Vertex vertex1, vertex2;
+        private readonly Vector2 vertex1, vertex2;
 
-        public Vertex Vertex1
+        public Vector2 Vertex1
         {
             get
             {
@@ -18,7 +18,7 @@ namespace ComputationalGeometry.Common
             }
         }
 
-        public Vertex Vertex2
+        public Vector2 Vertex2
         {
             get
             {
@@ -26,7 +26,7 @@ namespace ComputationalGeometry.Common
             }
         }
 
-        public Segment(Vertex vertex1, Vertex vertex2)
+        public Segment(Vector2 vertex1, Vector2 vertex2)
         {
             this.vertex1 = vertex1;
             this.vertex2 = vertex2;

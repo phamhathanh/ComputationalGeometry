@@ -18,21 +18,29 @@ namespace ComputationalGeometry.TrapezoidalMap
         {
             X = x;
             Y = y;
+        }
 
-            this.lower = new VerticalEdge()
+        private VerticalEdge CreateLower()
+        {
+            return new VerticalEdge()
             {
                 Vertex = this,
                 XPosition = this.X,
                 LeftTrapezoid = GetLowerLeft(),
-                RightTrapezoid = GetLowerRight()
+                RightTrapezoid = GetLowerRight(),
+                IsLowerExtension = true
             };
+        }
 
-            this.upper = new VerticalEdge()
+        private VerticalEdge CreateUpper()
+        {
+            return new VerticalEdge()
             {
                 Vertex = this,
                 XPosition = this.X,
                 LeftTrapezoid = GetUpperLeft(),
-                RightTrapezoid = GetUpperRight()
+                RightTrapezoid = GetUpperRight(),
+                IsLowerExtension = false
             };
         }
 
@@ -42,6 +50,9 @@ namespace ComputationalGeometry.TrapezoidalMap
             bool goRight = true;
             while (true)
             {
+                if (current.IsTrapezoid)
+                    return ((TrapezoidalNode)current).Trapezoid;
+
                 if (goRight)
                     current = current.RightChildren;
                 else
@@ -49,8 +60,6 @@ namespace ComputationalGeometry.TrapezoidalMap
 
                 if (current.IsSegment)
                     goRight = !goRight;
-                if (current.IsTrapezoid)
-                    return ((TrapezoidalNode)current).Trapezoid;
             }
             throw new InvalidOperationException();
         }
@@ -61,6 +70,9 @@ namespace ComputationalGeometry.TrapezoidalMap
             bool goRight = false;
             while (true)
             {
+                if (current.IsTrapezoid)
+                    return ((TrapezoidalNode)current).Trapezoid;
+
                 if (goRight)
                     current = current.RightChildren;
                 else
@@ -68,8 +80,6 @@ namespace ComputationalGeometry.TrapezoidalMap
 
                 if (current.IsVertex)
                     goRight = !goRight;
-                if (current.IsTrapezoid)
-                    return ((TrapezoidalNode)current).Trapezoid;
             }
             throw new InvalidOperationException();
         }
@@ -79,6 +89,9 @@ namespace ComputationalGeometry.TrapezoidalMap
             bool goRight = false;
             while (true)
             {
+                if (current.IsTrapezoid)
+                    return ((TrapezoidalNode)current).Trapezoid;
+
                 if (goRight)
                     current = current.RightChildren;
                 else
@@ -86,8 +99,6 @@ namespace ComputationalGeometry.TrapezoidalMap
 
                 if (current.IsVertex)
                     goRight = true;
-                if (current.IsTrapezoid)
-                    return ((TrapezoidalNode)current).Trapezoid;
             }
             throw new InvalidOperationException();
         }
@@ -98,6 +109,9 @@ namespace ComputationalGeometry.TrapezoidalMap
             bool goRight = true;
             while (true)
             {
+                if (current.IsTrapezoid)
+                    return ((TrapezoidalNode)current).Trapezoid;
+
                 if (goRight)
                     current = current.RightChildren;
                 else
@@ -105,8 +119,6 @@ namespace ComputationalGeometry.TrapezoidalMap
 
                 if (current.IsSegment)
                     goRight = false;
-                if (current.IsTrapezoid)
-                    return ((TrapezoidalNode)current).Trapezoid;
             }
             throw new InvalidOperationException();
         }
@@ -123,6 +135,8 @@ namespace ComputationalGeometry.TrapezoidalMap
         {
             get
             {
+                if (upper == null)
+                    upper = CreateUpper();
                 return upper;
             }
         }
@@ -131,6 +145,8 @@ namespace ComputationalGeometry.TrapezoidalMap
         {
             get
             {
+                if (lower == null)
+                    lower = CreateLower();
                 return lower;
             }
         }
@@ -160,11 +176,6 @@ namespace ComputationalGeometry.TrapezoidalMap
             if (X == objVertex.X && Y == objVertex.Y)
                 return true;
             return false;
-        }
-
-        public static implicit operator Vertex(Common.Vertex v)
-        {
-            throw new NotImplementedException();
         }
     }
 }

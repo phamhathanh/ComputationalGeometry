@@ -27,7 +27,12 @@ namespace ComputationalGeometry.TrapezoidalMap
         {
             get; set;
         }
-        
+
+        public bool IsLowerExtension
+        {
+            get; set;
+        }
+
         public VerticalEdge()
         {
         }

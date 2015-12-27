@@ -30,8 +30,10 @@ namespace ComputationalGeometry.TrapezoidalMap
             {
                 var item = queue.Dequeue();
                 yield return item;
-                queue.Enqueue(item.LeftChildren);
-                queue.Enqueue(item.RightChildren);
+                if (item.LeftChildren != null)
+                    queue.Enqueue(item.LeftChildren);
+                if (item.RightChildren != null)
+                    queue.Enqueue(item.RightChildren);
             }
         }
 
@@ -100,15 +102,15 @@ namespace ComputationalGeometry.TrapezoidalMap
             {
                 Vertex leftVertex;
                 Vertex rightVertex;
-                if (segments[i].Vertex1.Position.X < segments[i].Vertex2.Position.X)
+                if (segments[i].Vertex1.X < segments[i].Vertex2.X)
                 {
-                    leftVertex = segments[i].Vertex1;
-                    rightVertex = segments[i].Vertex2;
+                    leftVertex = new Vertex(segments[i].Vertex1.X, segments[i].Vertex1.Y);
+                    rightVertex = new Vertex(segments[i].Vertex2.X, segments[i].Vertex2.Y);
                 }
                 else
                 {
-                    leftVertex = segments[i].Vertex2;
-                    rightVertex = segments[i].Vertex1;
+                    leftVertex = new Vertex(segments[i].Vertex2.X, segments[i].Vertex2.Y);
+                    rightVertex = new Vertex(segments[i].Vertex1.X, segments[i].Vertex1.Y);
                 }
 
                 Segment newsegment = new Segment(leftVertex, rightVertex);
@@ -513,28 +515,28 @@ namespace ComputationalGeometry.TrapezoidalMap
                         continueCheck = false;
                         for (int j = 0; j < ListChildrens.Count - 1; j++)
                         {
-                            if (((TrapezoidalNode)ListChildrens[i].LeftChildren).Trapezoid.Rightp == null)
+                            if (((TrapezoidalNode)ListChildrens[j].LeftChildren).Trapezoid.Rightp == null)
                             {
                                 continueCheck = true;
-                                Trapezoid oldLeftTrap = ((TrapezoidalNode)ListChildrens[i].LeftChildren).Trapezoid;
-                                Trapezoid oldRightTrap = ((TrapezoidalNode)ListChildrens[i + 1].LeftChildren).Trapezoid;
+                                Trapezoid oldLeftTrap = ((TrapezoidalNode)ListChildrens[j].LeftChildren).Trapezoid;
+                                Trapezoid oldRightTrap = ((TrapezoidalNode)ListChildrens[j + 1].LeftChildren).Trapezoid;
                                 Trapezoid newTrap = new Trapezoid(oldLeftTrap.Leftp, oldRightTrap.Rightp, oldLeftTrap.Top, oldLeftTrap.Bottom);
                                 newTrap.SetNeighbor(oldLeftTrap.HigherLeftNeighbor, oldLeftTrap.LowerLeftNeighbor, oldRightTrap.HigherRightNeighbor, oldRightTrap.LowerRightNeighbor);
                                 TrapezoidalNode newNode = new TrapezoidalNode(newTrap);
-                                ListChildrens[i].LeftChildren = newNode;
-                                ListChildrens[i + 1].LeftChildren = newNode;
+                                ListChildrens[j].LeftChildren = newNode;
+                                ListChildrens[j + 1].LeftChildren = newNode;
                             }
 
-                            if (((TrapezoidalNode)ListChildrens[i].RightChildren).Trapezoid.Rightp == null)
+                            if (((TrapezoidalNode)ListChildrens[j].RightChildren).Trapezoid.Rightp == null)
                             {
                                 continueCheck = true;
-                                Trapezoid oldLeftTrap = ((TrapezoidalNode)ListChildrens[i].RightChildren).Trapezoid;
-                                Trapezoid oldRightTrap = ((TrapezoidalNode)ListChildrens[i + 1].RightChildren).Trapezoid;
+                                Trapezoid oldLeftTrap = ((TrapezoidalNode)ListChildrens[j].RightChildren).Trapezoid;
+                                Trapezoid oldRightTrap = ((TrapezoidalNode)ListChildrens[j + 1].RightChildren).Trapezoid;
                                 Trapezoid newTrap = new Trapezoid(oldLeftTrap.Leftp, oldRightTrap.Rightp, oldLeftTrap.Top, oldLeftTrap.Bottom);
                                 newTrap.SetNeighbor(oldLeftTrap.HigherLeftNeighbor, oldLeftTrap.LowerLeftNeighbor, oldRightTrap.HigherRightNeighbor, oldRightTrap.LowerRightNeighbor);
                                 TrapezoidalNode newNode = new TrapezoidalNode(newTrap);
-                                ListChildrens[i].RightChildren = newNode;
-                                ListChildrens[i + 1].RightChildren = newNode;
+                                ListChildrens[j].RightChildren = newNode;
+                                ListChildrens[j + 1].RightChildren = newNode;
                             }
 
                         }
@@ -568,7 +570,7 @@ namespace ComputationalGeometry.TrapezoidalMap
         List<Trapezoid> FindIntersectedTraps(Segment segment)
         {
             List<Trapezoid> ListInterTraps = new List<Trapezoid>();
-            ListInterTraps.Add((Trapezoid)Location(segment.LeftVertex.Position));
+            ListInterTraps.Add(Location(segment.LeftVertex.Position));
 
             while (!ListInterTraps.Last().Contain(segment.RightVertex.Position))
             {
@@ -595,17 +597,17 @@ namespace ComputationalGeometry.TrapezoidalMap
 
             foreach(Common.Segment segment in segments)
             {
-                left = left < segment.Vertex1.Position.X ? left : segment.Vertex1.Position.X;
-                left = left < segment.Vertex2.Position.X ? left : segment.Vertex2.Position.X;
+                left = left < segment.Vertex1.X ? left : segment.Vertex1.X;
+                left = left < segment.Vertex2.X ? left : segment.Vertex2.X;
 
-                right = right > segment.Vertex1.Position.X ? right : segment.Vertex1.Position.X;
-                right = right > segment.Vertex2.Position.X ? right : segment.Vertex2.Position.X;
+                right = right > segment.Vertex1.X ? right : segment.Vertex1.X;
+                right = right > segment.Vertex2.X ? right : segment.Vertex2.X;
 
-                top = top > segment.Vertex1.Position.Y ? top : segment.Vertex1.Position.Y;
-                top = top > segment.Vertex2.Position.Y ? top : segment.Vertex2.Position.Y;
+                top = top > segment.Vertex1.Y ? top : segment.Vertex1.Y;
+                top = top > segment.Vertex2.Y ? top : segment.Vertex2.Y;
 
-                bottom = bottom < segment.Vertex1.Position.Y ? bottom : segment.Vertex1.Position.Y;
-                bottom = bottom < segment.Vertex2.Position.Y ? bottom : segment.Vertex2.Position.Y;
+                bottom = bottom < segment.Vertex1.Y ? bottom : segment.Vertex1.Y;
+                bottom = bottom < segment.Vertex2.Y ? bottom : segment.Vertex2.Y;
             }
 
             --left;
@@ -621,7 +623,7 @@ namespace ComputationalGeometry.TrapezoidalMap
 
             R.Top = new Segment(R.Leftp, new Vertex(right, top));
             R.Bottom = new Segment(new Vertex(left, bottom), R.Rightp);
-            
+
             return R;
         }
 
@@ -649,7 +651,7 @@ namespace ComputationalGeometry.TrapezoidalMap
                     else
                         curNode = curNode.LeftChildren;
                 }
-            } 
+            }
             return ((TrapezoidalNode)curNode).Trapezoid;
         }
 

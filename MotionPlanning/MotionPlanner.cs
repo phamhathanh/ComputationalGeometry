@@ -111,16 +111,10 @@ namespace ComputationalGeometry.MotionPlanning
         {
             var edges = from obstacle in obstacles
                         from edge in obstacle.Edges
-                        select edge;
-
-            var vertexByVector = new Dictionary<Vector2, TrapezoidalMap.Vertex>();
-            foreach (var edge in edges)
-            {
-                vertexByVector.Add(edge.Origin.Position, new TrapezoidalMap.Vertex(edge.Origin.Position.X, edge.Origin.Position.Y));
-            }
+                        select edge;            
 
             var segments = from edge in edges
-                           select new TrapezoidalMap.Segment(vertexByVector[edge.Origin.Position], vertexByVector[edge.End.Position]);
+                           select new Segment(edge.Origin.Position, edge.End.Position);
 
             TrapezoidalMap.TrapezoidalMap trapezoidalMap = new TrapezoidalMap.TrapezoidalMap(segments.ToList());
             // must handle empty case

@@ -21,5 +21,10 @@
         {
             get;
         }
+
+        bool IsLowerExtension
+        {
+            get;
+        }
     }
 }

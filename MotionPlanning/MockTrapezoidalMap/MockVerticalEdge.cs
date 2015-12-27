@@ -40,5 +40,13 @@ namespace ComputationalGeometry.MotionPlanning
                 return right;
             }
         }
+
+        public bool IsLowerExtension
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

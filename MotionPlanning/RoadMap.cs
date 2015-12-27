@@ -76,7 +76,7 @@ namespace ComputationalGeometry.MotionPlanning
                 centerX = vertical.XPosition;
 
             var vertex = vertical.Vertex;
-            bool isLowerExtension = vertex.LowerExtension == vertical;
+            bool isLowerExtension = vertical.IsLowerExtension;
             if (isLowerExtension)
             {
                 topY = vertex.Position.Y;
